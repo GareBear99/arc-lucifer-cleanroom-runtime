@@ -26,7 +26,7 @@ It is aimed at people searching for:
 
 - [What this repository is](#what-this-repository-is)
 - [Why it exists](#why-it-exists)
-- [Current package state](#current-package-state-v2104)
+- [Current package state](#current-package-state-v2106)
 - [Direction goals](#direction-goals)
 - [What makes it different](#what-makes-it-different)
 - [Architecture walkthrough](#architecture-walkthrough)
@@ -35,12 +35,12 @@ It is aimed at people searching for:
 - [Quick start](#quick-start)
 - [Common commands](#common-commands)
 - [Examples walkthrough](#examples-walkthrough)
+- [Optional perception and embodiment](#optional-perception-and-embodiment)
 - [Self-improvement workflow](#self-improvement-workflow)
 - [Memory and archive model](#memory-and-archive-model)
 - [FixNet repair intelligence](#fixnet-repair-intelligence)
 - [How to visualize it working](#how-to-visualize-it-working)
-- [Validation](#validation)
-- [Documentation map](#documentation-map)
+- [Documentation routing](#documentation-routing)
 - [Comparison snapshot](#comparison-snapshot)
 - [Production posture](#production-posture)
 - [SEO and discoverability notes](#seo-and-discoverability-notes)
@@ -68,7 +68,7 @@ This project is aimed at a different center of gravity:
 
 The runtime identity comes from directives, doctrine, runtime state, memory lineage, repair lineage, and the attached cognition/model layer. That means continuity does not disappear when one model run ends.
 
-## Current package state (v2.10.5)
+## Current package state (v2.10.6)
 
 This repository currently includes:
 - persistent shared SQLite-backed kernel state
@@ -116,28 +116,36 @@ The cognition layer is intentionally open-ended. You can use current local-model
 
 ## Architecture walkthrough
 
-The core flow looks like this:
+### System graph
 
-```text
-DIRECTIVES
-   ↓
-CONTINUITY / BOOT
-   ↓
-WORLD + MEMORY STATE
-   ↓
-GOAL COMPILE / PLANNING
-   ↓
-ACTION / TOOL EXECUTION
-   ↓
-RECEIPT / RESULT
-   ↓
-VERIFY / COMPARE / EVALUATE
-   ↓
-TRUST / CURRICULUM / FIXNET
-   ↓
-ARCHIVE / CONTINUITY UPDATE
-   ↺
+```mermaid
+flowchart TD
+    D[Directives / Doctrine] --> B[Continuity Boot]
+    B --> K[ARC Kernel State]
+    K --> W[World + Memory State]
+    W --> P[Goal Compile / Planning]
+    P --> A[Action / Tool Execution]
+    A --> R[Receipt / Result]
+    R --> V[Verify / Compare / Evaluate]
+    V --> T[Trust / Curriculum]
+    V --> F[FixNet]
+    T --> M[Memory / Archive Update]
+    F --> M
+    M --> K
+    K --> C[Replaceable Cognition Core
+GGUF / llamafile / local model]
+    C --> P
+    O[Optional Perception / Embodiment Adapters] --> W
+    A --> O
 ```
+
+### Reader path
+
+- Start at the [Documentation hub](docs/INDEX.md)
+- Read the [architecture walkthrough](docs/architecture.md)
+- Read the [design doctrine](docs/doctrine.md)
+- Read the [optional perception and embodiment contract](docs/vision_runtime_optional_adapters.md)
+- Then go into [memory retention](docs/memory_retention.md) and the [autonomous patch cycle](docs/v2_3_autonomous_patch_cycle.md)
 
 ### Main subsystems
 
@@ -169,6 +177,18 @@ Stores fix objects, lineage, novelty checks, consensus, and archive mirrors so r
 Support health checks, monitoring, validation, doctor flows, trace inspection, and fallback-oriented operations.
 
 ## How the runtime actually works
+
+### Runtime flow
+
+```mermaid
+flowchart LR
+    G[Directive or Goal] --> C[Compile to Constraints]
+    C --> X[Execute Through Controlled Adapters]
+    X --> E[Emit Receipts / Evidence]
+    E --> Q[Verify / Compare / Score]
+    Q --> U[Update Memory / Trust / FixNet]
+    U --> N[Continue with Continuity State]
+```
 
 1. **You define directives or operator goals.**
 2. **The runtime compiles intent into bounded work.** Goals become constraints, invariants, evidence requirements, and stop conditions.
@@ -203,6 +223,17 @@ tests/                  automated validation coverage
 scripts/                bootstrap, smoke, and release-check scripts
 assets/                 public preview assets
 ```
+
+### Repo-to-doc routing
+
+- `src/arc_kernel/` → [Architecture](docs/architecture.md)
+- `src/lucifer_runtime/` → [Architecture](docs/architecture.md) and [llamafile flow](docs/llamafile_flow.md)
+- `src/cognition_services/` → [control loops](docs/v2_10_control_loops.md)
+- `src/memory_subsystem/` → [memory retention](docs/memory_retention.md) and [memory mirror + stack](docs/v2_4_memory_mirror_and_stack.md)
+- `src/self_improve/` → [self-improvement runs](docs/v2_0_self_improve_runs.md) and [autonomous patch cycle](docs/v2_3_autonomous_patch_cycle.md)
+- `src/fixnet/` → [FixNet archive embedding](docs/v2_9_1_fixnet_archive_embedding.md)
+- `src/perception_adapters/` → [optional perception and embodiment adapters](docs/vision_runtime_optional_adapters.md)
+- `tests/` → [benchmarks](docs/benchmarks.md) and release confidence surfaces in this README
 
 ## Quick start
 
@@ -278,10 +309,10 @@ PYTHONPATH=src python -m lucifer_runtime.cli directive-list
 
 The examples folder gives you the easiest way to understand the repo in motion:
 
-- `examples/run_runtime.py` shows the base runtime loop
-- `examples/run_persistent_loop.py` shows continuity-oriented execution
-- `examples/run_memory_retention.py` shows memory tiering and retention behavior
-- `examples/run_llamafile_stream.py` shows the local-model execution path
+- [`examples/run_runtime.py`](examples/run_runtime.py) shows the base runtime loop
+- [`examples/run_persistent_loop.py`](examples/run_persistent_loop.py) shows continuity-oriented execution
+- [`examples/run_memory_retention.py`](examples/run_memory_retention.py) shows memory tiering and retention behavior
+- [`examples/run_llamafile_stream.py`](examples/run_llamafile_stream.py) shows the local-model execution path
 
 A good first pass is:
 
@@ -298,13 +329,42 @@ The repo now makes this contract explicit:
 - when enabled, those layers should attach through bounded adapter interfaces and still feed structured state back into the same deterministic shell
 - the GGUF or local model should reason over summarized observations and world-state facts, not directly own millisecond motor control
 
+### Optional adapter graph
+
+```mermaid
+flowchart TD
+    S[Sensor or Simulator Input] --> A[Optional Perception Adapter]
+    A --> O[Structured Observation Batch]
+    O --> W[World-State / Memory Layer]
+    W --> G[GGUF or Local Model Executive]
+    G --> P[Planned Intent]
+    P --> V[Verifier / Policy Gate]
+    V --> X[Optional Action Adapter]
+    X --> E[Environment / Device / Body]
+    E --> R[Receipts and State Change]
+    R --> W
+```
+
 See:
-- `docs/vision_runtime_optional_adapters.md`
-- `src/perception_adapters/`
+- [Optional vision/runtime adapters](docs/vision_runtime_optional_adapters.md)
+- [`src/perception_adapters/`](src/perception_adapters)
 
 ## Self-improvement workflow
 
 The self-improvement system is intentionally constrained. It is designed to improve within a deterministic process rather than mutate itself blindly.
+
+### Improvement loop
+
+```mermaid
+flowchart LR
+    A[Analyze Current State] --> B[Scaffold Bounded Plan]
+    B --> C[Generate Candidates]
+    C --> D[Score and Select]
+    D --> E[Validate in Sandbox]
+    E --> F[Promote Passing Changes]
+    F --> G[Run Adversarial Checks]
+    G --> H[Publish Repair / Trust Knowledge]
+```
 
 High-level cycle:
 1. analyze the current state
@@ -316,9 +376,9 @@ High-level cycle:
 7. run adversarial or fault-injection checks on promoted paths
 
 Relevant source areas:
-- `src/self_improve/`
-- `src/code_editing/`
-- `src/verifier/`
+- [`src/self_improve/`](src/self_improve)
+- [`src/code_editing/`](src/code_editing)
+- [`src/verifier/`](src/verifier)
 
 ## Memory and archive model
 
@@ -332,7 +392,24 @@ It supports:
 - ranked search back into retained memory
 - readable memory metadata rather than opaque vector-only storage
 
+### Memory graph
+
+```mermaid
+flowchart LR
+    H[Hot Memory] --> W[Warm Memory]
+    H --> A[Archive Mirror]
+    W --> A
+    A --> R[Ranked Retrieval]
+    R --> P[Planning Context]
+    P --> H
+```
+
 This makes it easier to preserve continuity while still controlling memory sprawl.
+
+See:
+- [Memory retention](docs/memory_retention.md)
+- [Memory mirror and stack](docs/v2_4_memory_mirror_and_stack.md)
+- [Memory ranking notes](docs/v2_5_memory_ranking_notes.md)
 
 ## FixNet repair intelligence
 
@@ -344,6 +421,23 @@ That includes:
 - consensus-oriented publication logic
 - archive mirrors for long-term retention
 - runtime visibility into what has already worked before
+
+### FixNet graph
+
+```mermaid
+flowchart TD
+    I[Incident / Failure] --> D[Diagnosis]
+    D --> C[Candidate Fix]
+    C --> V[Validate / Reproduce]
+    V --> P[Publish Fix Object]
+    P --> N[Novelty / Consensus]
+    N --> A[Archive Mirror]
+    A --> R[Future Repair Retrieval]
+```
+
+See:
+- [FixNet archive embedding](docs/v2_9_1_fixnet_archive_embedding.md)
+- [Resilience and operator comments](docs/v2_2_resilience_and_comments.md)
 
 ## How to visualize it working
 
@@ -363,9 +457,9 @@ The `monitor` command, trace surfaces, receipts, memory listing, and FixNet view
 ## Validation
 
 This repository includes real validation surfaces:
-- automated tests under `tests/`
-- smoke validation under `scripts/smoke.sh`
-- release validation under `scripts/release_check.sh`
+- automated tests under [`tests/`](tests)
+- smoke validation under [`scripts/smoke.sh`](scripts/smoke.sh)
+- release validation under [`scripts/release_check.sh`](scripts/release_check.sh)
 - package build support through `python -m build`
 
 Recommended verification flow:
@@ -376,22 +470,37 @@ bash scripts/smoke.sh
 python -m build
 ```
 
-## Documentation map
+## Documentation routing
 
-Start here:
-- `docs/INDEX.md`
-- `docs/architecture.md`
-- `docs/doctrine.md`
+### Start here
+- [Documentation hub](docs/INDEX.md)
+- [Architecture](docs/architecture.md)
+- [Doctrine](docs/doctrine.md)
+- [Public direction](docs/public_direction.md)
 
-Then go deeper into:
-- `docs/vision_runtime_optional_adapters.md`
-- `docs/llamafile_flow.md`
-- `docs/memory_retention.md`
-- `docs/v2_3_autonomous_patch_cycle.md`
-- `docs/v2_7_adversarial_cycles.md`
-- `docs/v2_9_model_profiles_and_training.md`
-- `docs/source_comparison.md`
-- `docs/benchmarks.md`
+### Runtime, model, and embodiment
+- [Optional vision/runtime adapters](docs/vision_runtime_optional_adapters.md)
+- [llamafile flow](docs/llamafile_flow.md)
+- [Control loops](docs/v2_10_control_loops.md)
+- [Model profiles and training](docs/v2_9_model_profiles_and_training.md)
+
+### Memory, archive, and continuity
+- [Memory retention](docs/memory_retention.md)
+- [Memory mirror and stack](docs/v2_4_memory_mirror_and_stack.md)
+- [Memory ranking notes](docs/v2_5_memory_ranking_notes.md)
+
+### Self-improvement, repair, and trust
+- [Self-improvement runs](docs/v2_0_self_improve_runs.md)
+- [Autonomous patch cycle](docs/v2_3_autonomous_patch_cycle.md)
+- [Candidate cycles](docs/v2_6_candidate_cycles.md)
+- [Adversarial cycles](docs/v2_7_adversarial_cycles.md)
+- [FixNet archive embedding](docs/v2_9_1_fixnet_archive_embedding.md)
+
+### Release and public-facing docs
+- [Repo SEO notes](docs/REPO_SEO.md)
+- [Source comparison](docs/source_comparison.md)
+- [Benchmarks](docs/benchmarks.md)
+- [Migration plan](docs/migration_plan.md)
 
 ## Comparison snapshot
 

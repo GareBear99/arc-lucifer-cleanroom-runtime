@@ -69,6 +69,124 @@ pre { white-space: pre-wrap; word-break: break-word; background: #010409; paddin
         &quot;title&quot;: &quot;Read File (Dry Run)&quot;
       }
     ],
+    &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;: [
+      {
+        &quot;branch_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac:execute&quot;,
+        &quot;proposal&quot;: {
+          &quot;action&quot;: &quot;read_file&quot;,
+          &quot;capability&quot;: {
+            &quot;description&quot;: &quot;Read-only filesystem access&quot;,
+            &quot;dry_run_supported&quot;: true,
+            &quot;name&quot;: &quot;filesystem.read&quot;,
+            &quot;requires_confirmation&quot;: false,
+            &quot;risk&quot;: &quot;low&quot;,
+            &quot;side_effects&quot;: [],
+            &quot;validators&quot;: []
+          },
+          &quot;created_at&quot;: &quot;2026-04-03T23:21:08.161457+00:00&quot;,
+          &quot;params&quot;: {
+            &quot;path&quot;: &quot;smoke.txt&quot;
+          },
+          &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+          &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+          &quot;rationale&quot;: &quot;Routed from intent type: read_file&quot;
+        },
+        &quot;reasoning&quot;: &quot;Proceed directly when policy permits and operator confirms.&quot;,
+        &quot;score&quot;: 0.8,
+        &quot;title&quot;: &quot;Read File (Execute)&quot;
+      },
+      {
+        &quot;branch_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac:dryrun&quot;,
+        &quot;proposal&quot;: {
+          &quot;action&quot;: &quot;read_file&quot;,
+          &quot;capability&quot;: {
+            &quot;description&quot;: &quot;Read-only filesystem access&quot;,
+            &quot;dry_run_supported&quot;: true,
+            &quot;name&quot;: &quot;filesystem.read&quot;,
+            &quot;requires_confirmation&quot;: false,
+            &quot;risk&quot;: &quot;low&quot;,
+            &quot;side_effects&quot;: [],
+            &quot;validators&quot;: []
+          },
+          &quot;created_at&quot;: &quot;2026-04-03T23:21:08.161457+00:00&quot;,
+          &quot;params&quot;: {
+            &quot;dry_run&quot;: true,
+            &quot;path&quot;: &quot;smoke.txt&quot;
+          },
+          &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+          &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+          &quot;rationale&quot;: &quot;Routed from intent type: read_file&quot;
+        },
+        &quot;reasoning&quot;: &quot;Prefer observable, non-destructive path first.&quot;,
+        &quot;score&quot;: 0.75,
+        &quot;title&quot;: &quot;Read File (Dry Run)&quot;
+      }
+    ],
+    &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;: [
+      {
+        &quot;branch_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491:dryrun&quot;,
+        &quot;proposal&quot;: {
+          &quot;action&quot;: &quot;write_file&quot;,
+          &quot;capability&quot;: {
+            &quot;description&quot;: &quot;Filesystem write access&quot;,
+            &quot;dry_run_supported&quot;: true,
+            &quot;name&quot;: &quot;filesystem.write&quot;,
+            &quot;requires_confirmation&quot;: false,
+            &quot;risk&quot;: &quot;medium&quot;,
+            &quot;side_effects&quot;: [
+              &quot;mutates files&quot;
+            ],
+            &quot;validators&quot;: [
+              &quot;path_guard&quot;,
+              &quot;workspace_guard&quot;
+            ]
+          },
+          &quot;created_at&quot;: &quot;2026-04-03T23:21:05.197011+00:00&quot;,
+          &quot;params&quot;: {
+            &quot;content&quot;: &quot;hello from smoke&quot;,
+            &quot;dry_run&quot;: true,
+            &quot;path&quot;: &quot;smoke.txt&quot;
+          },
+          &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+          &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+          &quot;rationale&quot;: &quot;Routed from intent type: write_file&quot;
+        },
+        &quot;reasoning&quot;: &quot;Prefer observable, non-destructive path first.&quot;,
+        &quot;score&quot;: 0.95,
+        &quot;title&quot;: &quot;Write File (Dry Run)&quot;
+      },
+      {
+        &quot;branch_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491:execute&quot;,
+        &quot;proposal&quot;: {
+          &quot;action&quot;: &quot;write_file&quot;,
+          &quot;capability&quot;: {
+            &quot;description&quot;: &quot;Filesystem write access&quot;,
+            &quot;dry_run_supported&quot;: true,
+            &quot;name&quot;: &quot;filesystem.write&quot;,
+            &quot;requires_confirmation&quot;: false,
+            &quot;risk&quot;: &quot;medium&quot;,
+            &quot;side_effects&quot;: [
+              &quot;mutates files&quot;
+            ],
+            &quot;validators&quot;: [
+              &quot;path_guard&quot;,
+              &quot;workspace_guard&quot;
+            ]
+          },
+          &quot;created_at&quot;: &quot;2026-04-03T23:21:05.197011+00:00&quot;,
+          &quot;params&quot;: {
+            &quot;content&quot;: &quot;hello from smoke&quot;,
+            &quot;path&quot;: &quot;smoke.txt&quot;
+          },
+          &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+          &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+          &quot;rationale&quot;: &quot;Routed from intent type: write_file&quot;
+        },
+        &quot;reasoning&quot;: &quot;Proceed directly when policy permits and operator confirms.&quot;,
+        &quot;score&quot;: 0.6,
+        &quot;title&quot;: &quot;Write File (Execute)&quot;
+      }
+    ],
     &quot;9d10d768-2227-47ee-b7e4-8d0441a834bc&quot;: [
       {
         &quot;branch_id&quot;: &quot;9d10d768-2227-47ee-b7e4-8d0441a834bc:dryrun&quot;,
@@ -137,7 +255,9 @@ pre { white-space: pre-wrap; word-break: break-word; background: #010409; paddin
   },
   &quot;completed_proposals&quot;: [
     &quot;9d10d768-2227-47ee-b7e4-8d0441a834bc&quot;,
-    &quot;276afaf4-2643-46e7-b124-3edee8459d70&quot;
+    &quot;276afaf4-2643-46e7-b124-3edee8459d70&quot;,
+    &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+    &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;
   ],
   &quot;denied_proposals&quot;: [],
   &quot;evaluations&quot;: [
@@ -259,6 +379,125 @@ pre { white-space: pre-wrap; word-break: break-word; background: #010409; paddin
           &quot;title&quot;: &quot;Generate an operator trace snapshot&quot;
         }
       ]
+    },
+    {
+      &quot;kind&quot;: &quot;plan_summary&quot;,
+      &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+      &quot;steps&quot;: [
+        {
+          &quot;branch_score&quot;: 0.95,
+          &quot;detail&quot;: &quot;Routed from intent type: write_file&quot;,
+          &quot;title&quot;: &quot;Inspect proposal&quot;
+        },
+        {
+          &quot;branch_score&quot;: 0.95,
+          &quot;detail&quot;: &quot;Prefer highest-scoring safe branch first.&quot;,
+          &quot;title&quot;: &quot;Select branch&quot;
+        },
+        {
+          &quot;branch_score&quot;: 1.0,
+          &quot;detail&quot;: &quot;Run validators and capture receipt.&quot;,
+          &quot;title&quot;: &quot;Validate execution&quot;
+        }
+      ],
+      &quot;summary&quot;: &quot;Plan for write_file with 2 candidate branches.&quot;
+    },
+    {
+      &quot;all_validators_passed&quot;: true,
+      &quot;kind&quot;: &quot;execution_evaluation&quot;,
+      &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+      &quot;result_keys&quot;: [
+        &quot;bytes&quot;,
+        &quot;path&quot;,
+        &quot;undo&quot;,
+        &quot;written&quot;
+      ],
+      &quot;validator_pass_rate&quot;: 1.0
+    },
+    {
+      &quot;kind&quot;: &quot;plan_summary&quot;,
+      &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+      &quot;steps&quot;: [
+        {
+          &quot;branch_score&quot;: 0.8,
+          &quot;detail&quot;: &quot;Routed from intent type: read_file&quot;,
+          &quot;title&quot;: &quot;Inspect proposal&quot;
+        },
+        {
+          &quot;branch_score&quot;: 0.8,
+          &quot;detail&quot;: &quot;Prefer highest-scoring safe branch first.&quot;,
+          &quot;title&quot;: &quot;Select branch&quot;
+        },
+        {
+          &quot;branch_score&quot;: 1.0,
+          &quot;detail&quot;: &quot;Run validators and capture receipt.&quot;,
+          &quot;title&quot;: &quot;Validate execution&quot;
+        }
+      ],
+      &quot;summary&quot;: &quot;Plan for read_file with 2 candidate branches.&quot;
+    },
+    {
+      &quot;all_validators_passed&quot;: true,
+      &quot;kind&quot;: &quot;execution_evaluation&quot;,
+      &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+      &quot;result_keys&quot;: [
+        &quot;content&quot;,
+        &quot;path&quot;
+      ],
+      &quot;validator_pass_rate&quot;: 1.0
+    },
+    {
+      &quot;kind&quot;: &quot;benchmark_run&quot;,
+      &quot;pass_rate&quot;: 1.0,
+      &quot;passed&quot;: 3,
+      &quot;results&quot;: [
+        {
+          &quot;detail&quot;: &quot;write command should succeed&quot;,
+          &quot;name&quot;: &quot;write_file&quot;,
+          &quot;passed&quot;: true
+        },
+        {
+          &quot;detail&quot;: &quot;read should return written content&quot;,
+          &quot;name&quot;: &quot;read_file&quot;,
+          &quot;passed&quot;: true
+        },
+        {
+          &quot;detail&quot;: &quot;runtime should record receipts during benchmark&quot;,
+          &quot;name&quot;: &quot;state_persistence&quot;,
+          &quot;passed&quot;: true
+        }
+      ],
+      &quot;suite&quot;: &quot;smoke&quot;,
+      &quot;total&quot;: 3
+    },
+    {
+      &quot;kind&quot;: &quot;self_improve_analysis&quot;,
+      &quot;status&quot;: &quot;ok&quot;,
+      &quot;summary&quot;: {
+        &quot;benchmark_count&quot;: 2,
+        &quot;fallback_count&quot;: 0,
+        &quot;mirrored_memory_count&quot;: 0,
+        &quot;model_run_count&quot;: 0,
+        &quot;proposal_count&quot;: 4,
+        &quot;receipt_count&quot;: 4,
+        &quot;target_count&quot;: 2
+      },
+      &quot;targets&quot;: [
+        {
+          &quot;action_hint&quot;: &quot;Run `lucifer prompt ... --stream` with your local llamafile binary and GGUF model.&quot;,
+          &quot;key&quot;: &quot;model_path_unvalidated&quot;,
+          &quot;priority&quot;: &quot;medium&quot;,
+          &quot;rationale&quot;: &quot;No model prompt runs are recorded yet, so the managed llamafile path is not validated in this workspace.&quot;,
+          &quot;title&quot;: &quot;Validate local model prompt path&quot;
+        },
+        {
+          &quot;action_hint&quot;: &quot;Run `lucifer trace --output trace.html` to create a human-readable audit surface.&quot;,
+          &quot;key&quot;: &quot;trace_missing&quot;,
+          &quot;priority&quot;: &quot;low&quot;,
+          &quot;rationale&quot;: &quot;Receipts exist but no trace snapshot is present in the workspace.&quot;,
+          &quot;title&quot;: &quot;Generate an operator trace snapshot&quot;
+        }
+      ]
     }
   ],
   &quot;pending_confirmations&quot;: [],
@@ -306,12 +545,80 @@ pre { white-space: pre-wrap; word-break: break-word; background: #010409; paddin
         }
       ],
       &quot;summary&quot;: &quot;Plan for read_file with 2 candidate branches.&quot;
+    },
+    {
+      &quot;kind&quot;: &quot;plan_summary&quot;,
+      &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+      &quot;steps&quot;: [
+        {
+          &quot;branch_score&quot;: 0.95,
+          &quot;detail&quot;: &quot;Routed from intent type: write_file&quot;,
+          &quot;title&quot;: &quot;Inspect proposal&quot;
+        },
+        {
+          &quot;branch_score&quot;: 0.95,
+          &quot;detail&quot;: &quot;Prefer highest-scoring safe branch first.&quot;,
+          &quot;title&quot;: &quot;Select branch&quot;
+        },
+        {
+          &quot;branch_score&quot;: 1.0,
+          &quot;detail&quot;: &quot;Run validators and capture receipt.&quot;,
+          &quot;title&quot;: &quot;Validate execution&quot;
+        }
+      ],
+      &quot;summary&quot;: &quot;Plan for write_file with 2 candidate branches.&quot;
+    },
+    {
+      &quot;kind&quot;: &quot;plan_summary&quot;,
+      &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+      &quot;steps&quot;: [
+        {
+          &quot;branch_score&quot;: 0.8,
+          &quot;detail&quot;: &quot;Routed from intent type: read_file&quot;,
+          &quot;title&quot;: &quot;Inspect proposal&quot;
+        },
+        {
+          &quot;branch_score&quot;: 0.8,
+          &quot;detail&quot;: &quot;Prefer highest-scoring safe branch first.&quot;,
+          &quot;title&quot;: &quot;Select branch&quot;
+        },
+        {
+          &quot;branch_score&quot;: 1.0,
+          &quot;detail&quot;: &quot;Run validators and capture receipt.&quot;,
+          &quot;title&quot;: &quot;Validate execution&quot;
+        }
+      ],
+      &quot;summary&quot;: &quot;Plan for read_file with 2 candidate branches.&quot;
     }
   ]
 }</pre></div>
 <div class="card"><h2>Raw State</h2><pre>{
   &quot;archive_manifests&quot;: [],
   &quot;benchmark_runs&quot;: [
+    {
+      &quot;kind&quot;: &quot;benchmark_run&quot;,
+      &quot;pass_rate&quot;: 1.0,
+      &quot;passed&quot;: 3,
+      &quot;results&quot;: [
+        {
+          &quot;detail&quot;: &quot;write command should succeed&quot;,
+          &quot;name&quot;: &quot;write_file&quot;,
+          &quot;passed&quot;: true
+        },
+        {
+          &quot;detail&quot;: &quot;read should return written content&quot;,
+          &quot;name&quot;: &quot;read_file&quot;,
+          &quot;passed&quot;: true
+        },
+        {
+          &quot;detail&quot;: &quot;runtime should record receipts during benchmark&quot;,
+          &quot;name&quot;: &quot;state_persistence&quot;,
+          &quot;passed&quot;: true
+        }
+      ],
+      &quot;suite&quot;: &quot;smoke&quot;,
+      &quot;total&quot;: 3
+    },
     {
       &quot;kind&quot;: &quot;benchmark_run&quot;,
       &quot;pass_rate&quot;: 1.0,
@@ -461,6 +768,130 @@ pre { white-space: pre-wrap; word-break: break-word; background: #010409; paddin
         }
       ],
       &quot;proposal_id&quot;: &quot;276afaf4-2643-46e7-b124-3edee8459d70&quot;
+    },
+    {
+      &quot;candidates&quot;: [
+        {
+          &quot;branch_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491:dryrun&quot;,
+          &quot;proposal&quot;: {
+            &quot;action&quot;: &quot;write_file&quot;,
+            &quot;capability&quot;: {
+              &quot;description&quot;: &quot;Filesystem write access&quot;,
+              &quot;dry_run_supported&quot;: true,
+              &quot;name&quot;: &quot;filesystem.write&quot;,
+              &quot;requires_confirmation&quot;: false,
+              &quot;risk&quot;: &quot;medium&quot;,
+              &quot;side_effects&quot;: [
+                &quot;mutates files&quot;
+              ],
+              &quot;validators&quot;: [
+                &quot;path_guard&quot;,
+                &quot;workspace_guard&quot;
+              ]
+            },
+            &quot;created_at&quot;: &quot;2026-04-03T23:21:05.197011+00:00&quot;,
+            &quot;params&quot;: {
+              &quot;content&quot;: &quot;hello from smoke&quot;,
+              &quot;dry_run&quot;: true,
+              &quot;path&quot;: &quot;smoke.txt&quot;
+            },
+            &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+            &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+            &quot;rationale&quot;: &quot;Routed from intent type: write_file&quot;
+          },
+          &quot;reasoning&quot;: &quot;Prefer observable, non-destructive path first.&quot;,
+          &quot;score&quot;: 0.95,
+          &quot;title&quot;: &quot;Write File (Dry Run)&quot;
+        },
+        {
+          &quot;branch_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491:execute&quot;,
+          &quot;proposal&quot;: {
+            &quot;action&quot;: &quot;write_file&quot;,
+            &quot;capability&quot;: {
+              &quot;description&quot;: &quot;Filesystem write access&quot;,
+              &quot;dry_run_supported&quot;: true,
+              &quot;name&quot;: &quot;filesystem.write&quot;,
+              &quot;requires_confirmation&quot;: false,
+              &quot;risk&quot;: &quot;medium&quot;,
+              &quot;side_effects&quot;: [
+                &quot;mutates files&quot;
+              ],
+              &quot;validators&quot;: [
+                &quot;path_guard&quot;,
+                &quot;workspace_guard&quot;
+              ]
+            },
+            &quot;created_at&quot;: &quot;2026-04-03T23:21:05.197011+00:00&quot;,
+            &quot;params&quot;: {
+              &quot;content&quot;: &quot;hello from smoke&quot;,
+              &quot;path&quot;: &quot;smoke.txt&quot;
+            },
+            &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+            &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+            &quot;rationale&quot;: &quot;Routed from intent type: write_file&quot;
+          },
+          &quot;reasoning&quot;: &quot;Proceed directly when policy permits and operator confirms.&quot;,
+          &quot;score&quot;: 0.6,
+          &quot;title&quot;: &quot;Write File (Execute)&quot;
+        }
+      ],
+      &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;
+    },
+    {
+      &quot;candidates&quot;: [
+        {
+          &quot;branch_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac:execute&quot;,
+          &quot;proposal&quot;: {
+            &quot;action&quot;: &quot;read_file&quot;,
+            &quot;capability&quot;: {
+              &quot;description&quot;: &quot;Read-only filesystem access&quot;,
+              &quot;dry_run_supported&quot;: true,
+              &quot;name&quot;: &quot;filesystem.read&quot;,
+              &quot;requires_confirmation&quot;: false,
+              &quot;risk&quot;: &quot;low&quot;,
+              &quot;side_effects&quot;: [],
+              &quot;validators&quot;: []
+            },
+            &quot;created_at&quot;: &quot;2026-04-03T23:21:08.161457+00:00&quot;,
+            &quot;params&quot;: {
+              &quot;path&quot;: &quot;smoke.txt&quot;
+            },
+            &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+            &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+            &quot;rationale&quot;: &quot;Routed from intent type: read_file&quot;
+          },
+          &quot;reasoning&quot;: &quot;Proceed directly when policy permits and operator confirms.&quot;,
+          &quot;score&quot;: 0.8,
+          &quot;title&quot;: &quot;Read File (Execute)&quot;
+        },
+        {
+          &quot;branch_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac:dryrun&quot;,
+          &quot;proposal&quot;: {
+            &quot;action&quot;: &quot;read_file&quot;,
+            &quot;capability&quot;: {
+              &quot;description&quot;: &quot;Read-only filesystem access&quot;,
+              &quot;dry_run_supported&quot;: true,
+              &quot;name&quot;: &quot;filesystem.read&quot;,
+              &quot;requires_confirmation&quot;: false,
+              &quot;risk&quot;: &quot;low&quot;,
+              &quot;side_effects&quot;: [],
+              &quot;validators&quot;: []
+            },
+            &quot;created_at&quot;: &quot;2026-04-03T23:21:08.161457+00:00&quot;,
+            &quot;params&quot;: {
+              &quot;dry_run&quot;: true,
+              &quot;path&quot;: &quot;smoke.txt&quot;
+            },
+            &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+            &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+            &quot;rationale&quot;: &quot;Routed from intent type: read_file&quot;
+          },
+          &quot;reasoning&quot;: &quot;Prefer observable, non-destructive path first.&quot;,
+          &quot;score&quot;: 0.75,
+          &quot;title&quot;: &quot;Read File (Dry Run)&quot;
+        }
+      ],
+      &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;
     }
   ],
   &quot;branch_scores&quot;: {
@@ -515,6 +946,124 @@ pre { white-space: pre-wrap; word-break: break-word; background: #010409; paddin
         &quot;reasoning&quot;: &quot;Prefer observable, non-destructive path first.&quot;,
         &quot;score&quot;: 0.75,
         &quot;title&quot;: &quot;Read File (Dry Run)&quot;
+      }
+    ],
+    &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;: [
+      {
+        &quot;branch_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac:execute&quot;,
+        &quot;proposal&quot;: {
+          &quot;action&quot;: &quot;read_file&quot;,
+          &quot;capability&quot;: {
+            &quot;description&quot;: &quot;Read-only filesystem access&quot;,
+            &quot;dry_run_supported&quot;: true,
+            &quot;name&quot;: &quot;filesystem.read&quot;,
+            &quot;requires_confirmation&quot;: false,
+            &quot;risk&quot;: &quot;low&quot;,
+            &quot;side_effects&quot;: [],
+            &quot;validators&quot;: []
+          },
+          &quot;created_at&quot;: &quot;2026-04-03T23:21:08.161457+00:00&quot;,
+          &quot;params&quot;: {
+            &quot;path&quot;: &quot;smoke.txt&quot;
+          },
+          &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+          &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+          &quot;rationale&quot;: &quot;Routed from intent type: read_file&quot;
+        },
+        &quot;reasoning&quot;: &quot;Proceed directly when policy permits and operator confirms.&quot;,
+        &quot;score&quot;: 0.8,
+        &quot;title&quot;: &quot;Read File (Execute)&quot;
+      },
+      {
+        &quot;branch_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac:dryrun&quot;,
+        &quot;proposal&quot;: {
+          &quot;action&quot;: &quot;read_file&quot;,
+          &quot;capability&quot;: {
+            &quot;description&quot;: &quot;Read-only filesystem access&quot;,
+            &quot;dry_run_supported&quot;: true,
+            &quot;name&quot;: &quot;filesystem.read&quot;,
+            &quot;requires_confirmation&quot;: false,
+            &quot;risk&quot;: &quot;low&quot;,
+            &quot;side_effects&quot;: [],
+            &quot;validators&quot;: []
+          },
+          &quot;created_at&quot;: &quot;2026-04-03T23:21:08.161457+00:00&quot;,
+          &quot;params&quot;: {
+            &quot;dry_run&quot;: true,
+            &quot;path&quot;: &quot;smoke.txt&quot;
+          },
+          &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+          &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+          &quot;rationale&quot;: &quot;Routed from intent type: read_file&quot;
+        },
+        &quot;reasoning&quot;: &quot;Prefer observable, non-destructive path first.&quot;,
+        &quot;score&quot;: 0.75,
+        &quot;title&quot;: &quot;Read File (Dry Run)&quot;
+      }
+    ],
+    &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;: [
+      {
+        &quot;branch_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491:dryrun&quot;,
+        &quot;proposal&quot;: {
+          &quot;action&quot;: &quot;write_file&quot;,
+          &quot;capability&quot;: {
+            &quot;description&quot;: &quot;Filesystem write access&quot;,
+            &quot;dry_run_supported&quot;: true,
+            &quot;name&quot;: &quot;filesystem.write&quot;,
+            &quot;requires_confirmation&quot;: false,
+            &quot;risk&quot;: &quot;medium&quot;,
+            &quot;side_effects&quot;: [
+              &quot;mutates files&quot;
+            ],
+            &quot;validators&quot;: [
+              &quot;path_guard&quot;,
+              &quot;workspace_guard&quot;
+            ]
+          },
+          &quot;created_at&quot;: &quot;2026-04-03T23:21:05.197011+00:00&quot;,
+          &quot;params&quot;: {
+            &quot;content&quot;: &quot;hello from smoke&quot;,
+            &quot;dry_run&quot;: true,
+            &quot;path&quot;: &quot;smoke.txt&quot;
+          },
+          &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+          &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+          &quot;rationale&quot;: &quot;Routed from intent type: write_file&quot;
+        },
+        &quot;reasoning&quot;: &quot;Prefer observable, non-destructive path first.&quot;,
+        &quot;score&quot;: 0.95,
+        &quot;title&quot;: &quot;Write File (Dry Run)&quot;
+      },
+      {
+        &quot;branch_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491:execute&quot;,
+        &quot;proposal&quot;: {
+          &quot;action&quot;: &quot;write_file&quot;,
+          &quot;capability&quot;: {
+            &quot;description&quot;: &quot;Filesystem write access&quot;,
+            &quot;dry_run_supported&quot;: true,
+            &quot;name&quot;: &quot;filesystem.write&quot;,
+            &quot;requires_confirmation&quot;: false,
+            &quot;risk&quot;: &quot;medium&quot;,
+            &quot;side_effects&quot;: [
+              &quot;mutates files&quot;
+            ],
+            &quot;validators&quot;: [
+              &quot;path_guard&quot;,
+              &quot;workspace_guard&quot;
+            ]
+          },
+          &quot;created_at&quot;: &quot;2026-04-03T23:21:05.197011+00:00&quot;,
+          &quot;params&quot;: {
+            &quot;content&quot;: &quot;hello from smoke&quot;,
+            &quot;path&quot;: &quot;smoke.txt&quot;
+          },
+          &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+          &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+          &quot;rationale&quot;: &quot;Routed from intent type: write_file&quot;
+        },
+        &quot;reasoning&quot;: &quot;Proceed directly when policy permits and operator confirms.&quot;,
+        &quot;score&quot;: 0.6,
+        &quot;title&quot;: &quot;Write File (Execute)&quot;
       }
     ],
     &quot;9d10d768-2227-47ee-b7e4-8d0441a834bc&quot;: [
@@ -586,7 +1135,9 @@ pre { white-space: pre-wrap; word-break: break-word; background: #010409; paddin
   &quot;code_edits&quot;: [],
   &quot;completed_proposals&quot;: [
     &quot;9d10d768-2227-47ee-b7e4-8d0441a834bc&quot;,
-    &quot;276afaf4-2643-46e7-b124-3edee8459d70&quot;
+    &quot;276afaf4-2643-46e7-b124-3edee8459d70&quot;,
+    &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+    &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;
   ],
   &quot;continuity_events&quot;: [],
   &quot;curriculum_updates&quot;: [],
@@ -711,6 +1262,125 @@ pre { white-space: pre-wrap; word-break: break-word; background: #010409; paddin
           &quot;title&quot;: &quot;Generate an operator trace snapshot&quot;
         }
       ]
+    },
+    {
+      &quot;kind&quot;: &quot;plan_summary&quot;,
+      &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+      &quot;steps&quot;: [
+        {
+          &quot;branch_score&quot;: 0.95,
+          &quot;detail&quot;: &quot;Routed from intent type: write_file&quot;,
+          &quot;title&quot;: &quot;Inspect proposal&quot;
+        },
+        {
+          &quot;branch_score&quot;: 0.95,
+          &quot;detail&quot;: &quot;Prefer highest-scoring safe branch first.&quot;,
+          &quot;title&quot;: &quot;Select branch&quot;
+        },
+        {
+          &quot;branch_score&quot;: 1.0,
+          &quot;detail&quot;: &quot;Run validators and capture receipt.&quot;,
+          &quot;title&quot;: &quot;Validate execution&quot;
+        }
+      ],
+      &quot;summary&quot;: &quot;Plan for write_file with 2 candidate branches.&quot;
+    },
+    {
+      &quot;all_validators_passed&quot;: true,
+      &quot;kind&quot;: &quot;execution_evaluation&quot;,
+      &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+      &quot;result_keys&quot;: [
+        &quot;bytes&quot;,
+        &quot;path&quot;,
+        &quot;undo&quot;,
+        &quot;written&quot;
+      ],
+      &quot;validator_pass_rate&quot;: 1.0
+    },
+    {
+      &quot;kind&quot;: &quot;plan_summary&quot;,
+      &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+      &quot;steps&quot;: [
+        {
+          &quot;branch_score&quot;: 0.8,
+          &quot;detail&quot;: &quot;Routed from intent type: read_file&quot;,
+          &quot;title&quot;: &quot;Inspect proposal&quot;
+        },
+        {
+          &quot;branch_score&quot;: 0.8,
+          &quot;detail&quot;: &quot;Prefer highest-scoring safe branch first.&quot;,
+          &quot;title&quot;: &quot;Select branch&quot;
+        },
+        {
+          &quot;branch_score&quot;: 1.0,
+          &quot;detail&quot;: &quot;Run validators and capture receipt.&quot;,
+          &quot;title&quot;: &quot;Validate execution&quot;
+        }
+      ],
+      &quot;summary&quot;: &quot;Plan for read_file with 2 candidate branches.&quot;
+    },
+    {
+      &quot;all_validators_passed&quot;: true,
+      &quot;kind&quot;: &quot;execution_evaluation&quot;,
+      &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+      &quot;result_keys&quot;: [
+        &quot;content&quot;,
+        &quot;path&quot;
+      ],
+      &quot;validator_pass_rate&quot;: 1.0
+    },
+    {
+      &quot;kind&quot;: &quot;benchmark_run&quot;,
+      &quot;pass_rate&quot;: 1.0,
+      &quot;passed&quot;: 3,
+      &quot;results&quot;: [
+        {
+          &quot;detail&quot;: &quot;write command should succeed&quot;,
+          &quot;name&quot;: &quot;write_file&quot;,
+          &quot;passed&quot;: true
+        },
+        {
+          &quot;detail&quot;: &quot;read should return written content&quot;,
+          &quot;name&quot;: &quot;read_file&quot;,
+          &quot;passed&quot;: true
+        },
+        {
+          &quot;detail&quot;: &quot;runtime should record receipts during benchmark&quot;,
+          &quot;name&quot;: &quot;state_persistence&quot;,
+          &quot;passed&quot;: true
+        }
+      ],
+      &quot;suite&quot;: &quot;smoke&quot;,
+      &quot;total&quot;: 3
+    },
+    {
+      &quot;kind&quot;: &quot;self_improve_analysis&quot;,
+      &quot;status&quot;: &quot;ok&quot;,
+      &quot;summary&quot;: {
+        &quot;benchmark_count&quot;: 2,
+        &quot;fallback_count&quot;: 0,
+        &quot;mirrored_memory_count&quot;: 0,
+        &quot;model_run_count&quot;: 0,
+        &quot;proposal_count&quot;: 4,
+        &quot;receipt_count&quot;: 4,
+        &quot;target_count&quot;: 2
+      },
+      &quot;targets&quot;: [
+        {
+          &quot;action_hint&quot;: &quot;Run `lucifer prompt ... --stream` with your local llamafile binary and GGUF model.&quot;,
+          &quot;key&quot;: &quot;model_path_unvalidated&quot;,
+          &quot;priority&quot;: &quot;medium&quot;,
+          &quot;rationale&quot;: &quot;No model prompt runs are recorded yet, so the managed llamafile path is not validated in this workspace.&quot;,
+          &quot;title&quot;: &quot;Validate local model prompt path&quot;
+        },
+        {
+          &quot;action_hint&quot;: &quot;Run `lucifer trace --output trace.html` to create a human-readable audit surface.&quot;,
+          &quot;key&quot;: &quot;trace_missing&quot;,
+          &quot;priority&quot;: &quot;low&quot;,
+          &quot;rationale&quot;: &quot;Receipts exist but no trace snapshot is present in the workspace.&quot;,
+          &quot;title&quot;: &quot;Generate an operator trace snapshot&quot;
+        }
+      ]
     }
   ],
   &quot;executions&quot;: [
@@ -723,6 +1393,16 @@ pre { white-space: pre-wrap; word-break: break-word; background: #010409; paddin
       &quot;action&quot;: &quot;read_file&quot;,
       &quot;proposal_id&quot;: &quot;276afaf4-2643-46e7-b124-3edee8459d70&quot;,
       &quot;success&quot;: true
+    },
+    {
+      &quot;action&quot;: &quot;write_file&quot;,
+      &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+      &quot;success&quot;: true
+    },
+    {
+      &quot;action&quot;: &quot;read_file&quot;,
+      &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+      &quot;success&quot;: true
     }
   ],
   &quot;fallback_events&quot;: [],
@@ -730,6 +1410,14 @@ pre { white-space: pre-wrap; word-break: break-word; background: #010409; paddin
   &quot;fixnet_cases&quot;: [],
   &quot;improvement_runs&quot;: [],
   &quot;inputs&quot;: [
+    {
+      &quot;confirm&quot;: false,
+      &quot;text&quot;: &quot;write smoke.txt :: hello from smoke&quot;
+    },
+    {
+      &quot;confirm&quot;: false,
+      &quot;text&quot;: &quot;read smoke.txt&quot;
+    },
     {
       &quot;confirm&quot;: false,
       &quot;text&quot;: &quot;write smoke.txt :: hello from smoke&quot;
@@ -786,6 +1474,50 @@ pre { white-space: pre-wrap; word-break: break-word; background: #010409; paddin
         }
       ],
       &quot;summary&quot;: &quot;Plan for read_file with 2 candidate branches.&quot;
+    },
+    {
+      &quot;kind&quot;: &quot;plan_summary&quot;,
+      &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+      &quot;steps&quot;: [
+        {
+          &quot;branch_score&quot;: 0.95,
+          &quot;detail&quot;: &quot;Routed from intent type: write_file&quot;,
+          &quot;title&quot;: &quot;Inspect proposal&quot;
+        },
+        {
+          &quot;branch_score&quot;: 0.95,
+          &quot;detail&quot;: &quot;Prefer highest-scoring safe branch first.&quot;,
+          &quot;title&quot;: &quot;Select branch&quot;
+        },
+        {
+          &quot;branch_score&quot;: 1.0,
+          &quot;detail&quot;: &quot;Run validators and capture receipt.&quot;,
+          &quot;title&quot;: &quot;Validate execution&quot;
+        }
+      ],
+      &quot;summary&quot;: &quot;Plan for write_file with 2 candidate branches.&quot;
+    },
+    {
+      &quot;kind&quot;: &quot;plan_summary&quot;,
+      &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+      &quot;steps&quot;: [
+        {
+          &quot;branch_score&quot;: 0.8,
+          &quot;detail&quot;: &quot;Routed from intent type: read_file&quot;,
+          &quot;title&quot;: &quot;Inspect proposal&quot;
+        },
+        {
+          &quot;branch_score&quot;: 0.8,
+          &quot;detail&quot;: &quot;Prefer highest-scoring safe branch first.&quot;,
+          &quot;title&quot;: &quot;Select branch&quot;
+        },
+        {
+          &quot;branch_score&quot;: 1.0,
+          &quot;detail&quot;: &quot;Run validators and capture receipt.&quot;,
+          &quot;title&quot;: &quot;Validate execution&quot;
+        }
+      ],
+      &quot;summary&quot;: &quot;Plan for read_file with 2 candidate branches.&quot;
     }
   ],
   &quot;policy_decisions&quot;: [
@@ -801,6 +1533,20 @@ pre { white-space: pre-wrap; word-break: break-word; background: #010409; paddin
       &quot;decided_by&quot;: &quot;arc-policy&quot;,
       &quot;decision&quot;: &quot;approve&quot;,
       &quot;proposal_id&quot;: &quot;276afaf4-2643-46e7-b124-3edee8459d70&quot;,
+      &quot;reason&quot;: &quot;Action approved under current policy.&quot;
+    },
+    {
+      &quot;created_at&quot;: &quot;2026-04-03T23:21:05.198512+00:00&quot;,
+      &quot;decided_by&quot;: &quot;arc-policy&quot;,
+      &quot;decision&quot;: &quot;approve&quot;,
+      &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+      &quot;reason&quot;: &quot;Action approved under current policy.&quot;
+    },
+    {
+      &quot;created_at&quot;: &quot;2026-04-03T23:21:08.162868+00:00&quot;,
+      &quot;decided_by&quot;: &quot;arc-policy&quot;,
+      &quot;decision&quot;: &quot;approve&quot;,
+      &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
       &quot;reason&quot;: &quot;Action approved under current policy.&quot;
     }
   ],
@@ -846,6 +1592,50 @@ pre { white-space: pre-wrap; word-break: break-word; background: #010409; paddin
         &quot;path&quot;: &quot;smoke.txt&quot;
       },
       &quot;proposal_id&quot;: &quot;276afaf4-2643-46e7-b124-3edee8459d70&quot;,
+      &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+      &quot;rationale&quot;: &quot;Routed from intent type: read_file&quot;
+    },
+    {
+      &quot;action&quot;: &quot;write_file&quot;,
+      &quot;capability&quot;: {
+        &quot;description&quot;: &quot;Filesystem write access&quot;,
+        &quot;dry_run_supported&quot;: true,
+        &quot;name&quot;: &quot;filesystem.write&quot;,
+        &quot;requires_confirmation&quot;: false,
+        &quot;risk&quot;: &quot;medium&quot;,
+        &quot;side_effects&quot;: [
+          &quot;mutates files&quot;
+        ],
+        &quot;validators&quot;: [
+          &quot;path_guard&quot;,
+          &quot;workspace_guard&quot;
+        ]
+      },
+      &quot;created_at&quot;: &quot;2026-04-03T23:21:05.197011+00:00&quot;,
+      &quot;params&quot;: {
+        &quot;content&quot;: &quot;hello from smoke&quot;,
+        &quot;path&quot;: &quot;smoke.txt&quot;
+      },
+      &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+      &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+      &quot;rationale&quot;: &quot;Routed from intent type: write_file&quot;
+    },
+    {
+      &quot;action&quot;: &quot;read_file&quot;,
+      &quot;capability&quot;: {
+        &quot;description&quot;: &quot;Read-only filesystem access&quot;,
+        &quot;dry_run_supported&quot;: true,
+        &quot;name&quot;: &quot;filesystem.read&quot;,
+        &quot;requires_confirmation&quot;: false,
+        &quot;risk&quot;: &quot;low&quot;,
+        &quot;side_effects&quot;: [],
+        &quot;validators&quot;: []
+      },
+      &quot;created_at&quot;: &quot;2026-04-03T23:21:08.161457+00:00&quot;,
+      &quot;params&quot;: {
+        &quot;path&quot;: &quot;smoke.txt&quot;
+      },
+      &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
       &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
       &quot;rationale&quot;: &quot;Routed from intent type: read_file&quot;
     }
@@ -897,13 +1687,60 @@ pre { white-space: pre-wrap; word-break: break-word; background: #010409; paddin
           &quot;validator&quot;: &quot;path_returned&quot;
         }
       ]
+    },
+    {
+      &quot;created_at&quot;: &quot;2026-04-03T23:21:05.200419+00:00&quot;,
+      &quot;outputs&quot;: {
+        &quot;bytes&quot;: 16,
+        &quot;path&quot;: &quot;smoke.txt&quot;,
+        &quot;undo&quot;: {
+          &quot;action&quot;: &quot;restore_file&quot;,
+          &quot;content&quot;: &quot;hello from smoke&quot;,
+          &quot;existed&quot;: true,
+          &quot;path&quot;: &quot;smoke.txt&quot;
+        },
+        &quot;written&quot;: true
+      },
+      &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+      &quot;receipt_id&quot;: &quot;b90912ad-9c5c-4aff-8307-62be61ff7eb4&quot;,
+      &quot;success&quot;: true,
+      &quot;validator_results&quot;: [
+        {
+          &quot;passed&quot;: true,
+          &quot;validator&quot;: &quot;execution_success&quot;
+        },
+        {
+          &quot;passed&quot;: true,
+          &quot;validator&quot;: &quot;path_returned&quot;
+        }
+      ]
+    },
+    {
+      &quot;created_at&quot;: &quot;2026-04-03T23:21:08.164579+00:00&quot;,
+      &quot;outputs&quot;: {
+        &quot;content&quot;: &quot;hello from smoke&quot;,
+        &quot;path&quot;: &quot;smoke.txt&quot;
+      },
+      &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+      &quot;receipt_id&quot;: &quot;c500b86f-43d9-46f0-bfee-a5b3a67cc3c3&quot;,
+      &quot;success&quot;: true,
+      &quot;validator_results&quot;: [
+        {
+          &quot;passed&quot;: true,
+          &quot;validator&quot;: &quot;execution_success&quot;
+        },
+        {
+          &quot;passed&quot;: true,
+          &quot;validator&quot;: &quot;path_returned&quot;
+        }
+      ]
     }
   ],
   &quot;trust_profiles&quot;: [],
   &quot;world_model&quot;: {
     &quot;active_directive_count&quot;: 0,
     &quot;adversarial_event_count&quot;: 0,
-    &quot;benchmark_count&quot;: 1,
+    &quot;benchmark_count&quot;: 2,
     &quot;code_edit_count&quot;: 0,
     &quot;continuity_event_count&quot;: 0,
     &quot;curriculum_update_count&quot;: 0,
@@ -918,20 +1755,43 @@ pre { white-space: pre-wrap; word-break: break-word; background: #010409; paddin
         &quot;content_preview&quot;: &quot;hello from smoke&quot;,
         &quot;last_success&quot;: true,
         &quot;path&quot;: &quot;smoke.txt&quot;,
-        &quot;receipt_id&quot;: &quot;52c032ea-7a97-4a2f-88c5-e62d726b73e4&quot;
+        &quot;receipt_id&quot;: &quot;c500b86f-43d9-46f0-bfee-a5b3a67cc3c3&quot;
       }
     ],
     &quot;mirrored_live_memory_count&quot;: 0,
     &quot;mirrored_memory_headers&quot;: [],
     &quot;model_run_count&quot;: 0,
-    &quot;proposal_count&quot;: 2,
-    &quot;receipt_count&quot;: 2,
+    &quot;proposal_count&quot;: 4,
+    &quot;receipt_count&quot;: 4,
     &quot;recent_continuity_events&quot;: [],
     &quot;recent_curriculum_updates&quot;: [],
     &quot;recent_directives&quot;: [],
     &quot;recent_fixnet_archives&quot;: [],
     &quot;recent_fixnet_cases&quot;: [],
     &quot;recent_outputs&quot;: [
+      {
+        &quot;outputs&quot;: {
+          &quot;bytes&quot;: 16,
+          &quot;path&quot;: &quot;smoke.txt&quot;,
+          &quot;undo&quot;: {
+            &quot;action&quot;: &quot;restore_file&quot;,
+            &quot;content&quot;: &quot;hello from smoke&quot;,
+            &quot;existed&quot;: true,
+            &quot;path&quot;: &quot;smoke.txt&quot;
+          },
+          &quot;written&quot;: true
+        },
+        &quot;path&quot;: &quot;smoke.txt&quot;,
+        &quot;success&quot;: true
+      },
+      {
+        &quot;outputs&quot;: {
+          &quot;content&quot;: &quot;hello from smoke&quot;,
+          &quot;path&quot;: &quot;smoke.txt&quot;
+        },
+        &quot;path&quot;: &quot;smoke.txt&quot;,
+        &quot;success&quot;: true
+      },
       {
         &quot;outputs&quot;: {
           &quot;bytes&quot;: 16,
@@ -1435,6 +2295,498 @@ pre { white-space: pre-wrap; word-break: break-word; background: #010409; paddin
         &quot;model_run_count&quot;: 0,
         &quot;proposal_count&quot;: 2,
         &quot;receipt_count&quot;: 2,
+        &quot;target_count&quot;: 2
+      },
+      &quot;targets&quot;: [
+        {
+          &quot;action_hint&quot;: &quot;Run `lucifer prompt ... --stream` with your local llamafile binary and GGUF model.&quot;,
+          &quot;key&quot;: &quot;model_path_unvalidated&quot;,
+          &quot;priority&quot;: &quot;medium&quot;,
+          &quot;rationale&quot;: &quot;No model prompt runs are recorded yet, so the managed llamafile path is not validated in this workspace.&quot;,
+          &quot;title&quot;: &quot;Validate local model prompt path&quot;
+        },
+        {
+          &quot;action_hint&quot;: &quot;Run `lucifer trace --output trace.html` to create a human-readable audit surface.&quot;,
+          &quot;key&quot;: &quot;trace_missing&quot;,
+          &quot;priority&quot;: &quot;low&quot;,
+          &quot;rationale&quot;: &quot;Receipts exist but no trace snapshot is present in the workspace.&quot;,
+          &quot;title&quot;: &quot;Generate an operator trace snapshot&quot;
+        }
+      ]
+    }
+  },
+  {
+    &quot;actor&quot;: &quot;operator&quot;,
+    &quot;created_at&quot;: &quot;2026-04-03T23:21:05.196236+00:00&quot;,
+    &quot;event_id&quot;: &quot;d09b8864-f1b1-44d3-8d84-bdfcd6297505&quot;,
+    &quot;kind&quot;: &quot;input&quot;,
+    &quot;parent_event_id&quot;: null,
+    &quot;payload&quot;: {
+      &quot;confirm&quot;: false,
+      &quot;text&quot;: &quot;write smoke.txt :: hello from smoke&quot;
+    }
+  },
+  {
+    &quot;actor&quot;: &quot;lucifer-runtime&quot;,
+    &quot;created_at&quot;: &quot;2026-04-03T23:21:05.197139+00:00&quot;,
+    &quot;event_id&quot;: &quot;d629e304-23c3-43c6-ad00-24b262e53197&quot;,
+    &quot;kind&quot;: &quot;proposal&quot;,
+    &quot;parent_event_id&quot;: &quot;d09b8864-f1b1-44d3-8d84-bdfcd6297505&quot;,
+    &quot;payload&quot;: {
+      &quot;action&quot;: &quot;write_file&quot;,
+      &quot;capability&quot;: {
+        &quot;description&quot;: &quot;Filesystem write access&quot;,
+        &quot;dry_run_supported&quot;: true,
+        &quot;name&quot;: &quot;filesystem.write&quot;,
+        &quot;requires_confirmation&quot;: false,
+        &quot;risk&quot;: &quot;medium&quot;,
+        &quot;side_effects&quot;: [
+          &quot;mutates files&quot;
+        ],
+        &quot;validators&quot;: [
+          &quot;path_guard&quot;,
+          &quot;workspace_guard&quot;
+        ]
+      },
+      &quot;created_at&quot;: &quot;2026-04-03T23:21:05.197011+00:00&quot;,
+      &quot;params&quot;: {
+        &quot;content&quot;: &quot;hello from smoke&quot;,
+        &quot;path&quot;: &quot;smoke.txt&quot;
+      },
+      &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+      &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+      &quot;rationale&quot;: &quot;Routed from intent type: write_file&quot;
+    }
+  },
+  {
+    &quot;actor&quot;: &quot;branch-planner&quot;,
+    &quot;created_at&quot;: &quot;2026-04-03T23:21:05.197675+00:00&quot;,
+    &quot;event_id&quot;: &quot;77dff9e7-5a36-4785-9842-b84c7eea6216&quot;,
+    &quot;kind&quot;: &quot;branch_plan&quot;,
+    &quot;parent_event_id&quot;: &quot;d629e304-23c3-43c6-ad00-24b262e53197&quot;,
+    &quot;payload&quot;: {
+      &quot;candidates&quot;: [
+        {
+          &quot;branch_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491:dryrun&quot;,
+          &quot;proposal&quot;: {
+            &quot;action&quot;: &quot;write_file&quot;,
+            &quot;capability&quot;: {
+              &quot;description&quot;: &quot;Filesystem write access&quot;,
+              &quot;dry_run_supported&quot;: true,
+              &quot;name&quot;: &quot;filesystem.write&quot;,
+              &quot;requires_confirmation&quot;: false,
+              &quot;risk&quot;: &quot;medium&quot;,
+              &quot;side_effects&quot;: [
+                &quot;mutates files&quot;
+              ],
+              &quot;validators&quot;: [
+                &quot;path_guard&quot;,
+                &quot;workspace_guard&quot;
+              ]
+            },
+            &quot;created_at&quot;: &quot;2026-04-03T23:21:05.197011+00:00&quot;,
+            &quot;params&quot;: {
+              &quot;content&quot;: &quot;hello from smoke&quot;,
+              &quot;dry_run&quot;: true,
+              &quot;path&quot;: &quot;smoke.txt&quot;
+            },
+            &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+            &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+            &quot;rationale&quot;: &quot;Routed from intent type: write_file&quot;
+          },
+          &quot;reasoning&quot;: &quot;Prefer observable, non-destructive path first.&quot;,
+          &quot;score&quot;: 0.95,
+          &quot;title&quot;: &quot;Write File (Dry Run)&quot;
+        },
+        {
+          &quot;branch_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491:execute&quot;,
+          &quot;proposal&quot;: {
+            &quot;action&quot;: &quot;write_file&quot;,
+            &quot;capability&quot;: {
+              &quot;description&quot;: &quot;Filesystem write access&quot;,
+              &quot;dry_run_supported&quot;: true,
+              &quot;name&quot;: &quot;filesystem.write&quot;,
+              &quot;requires_confirmation&quot;: false,
+              &quot;risk&quot;: &quot;medium&quot;,
+              &quot;side_effects&quot;: [
+                &quot;mutates files&quot;
+              ],
+              &quot;validators&quot;: [
+                &quot;path_guard&quot;,
+                &quot;workspace_guard&quot;
+              ]
+            },
+            &quot;created_at&quot;: &quot;2026-04-03T23:21:05.197011+00:00&quot;,
+            &quot;params&quot;: {
+              &quot;content&quot;: &quot;hello from smoke&quot;,
+              &quot;path&quot;: &quot;smoke.txt&quot;
+            },
+            &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+            &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+            &quot;rationale&quot;: &quot;Routed from intent type: write_file&quot;
+          },
+          &quot;reasoning&quot;: &quot;Proceed directly when policy permits and operator confirms.&quot;,
+          &quot;score&quot;: 0.6,
+          &quot;title&quot;: &quot;Write File (Execute)&quot;
+        }
+      ],
+      &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;
+    }
+  },
+  {
+    &quot;actor&quot;: &quot;planner&quot;,
+    &quot;created_at&quot;: &quot;2026-04-03T23:21:05.198160+00:00&quot;,
+    &quot;event_id&quot;: &quot;8ce9aaae-bfd3-421f-8f8e-c21d794cd8ce&quot;,
+    &quot;kind&quot;: &quot;evaluation&quot;,
+    &quot;parent_event_id&quot;: &quot;d629e304-23c3-43c6-ad00-24b262e53197&quot;,
+    &quot;payload&quot;: {
+      &quot;kind&quot;: &quot;plan_summary&quot;,
+      &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+      &quot;steps&quot;: [
+        {
+          &quot;branch_score&quot;: 0.95,
+          &quot;detail&quot;: &quot;Routed from intent type: write_file&quot;,
+          &quot;title&quot;: &quot;Inspect proposal&quot;
+        },
+        {
+          &quot;branch_score&quot;: 0.95,
+          &quot;detail&quot;: &quot;Prefer highest-scoring safe branch first.&quot;,
+          &quot;title&quot;: &quot;Select branch&quot;
+        },
+        {
+          &quot;branch_score&quot;: 1.0,
+          &quot;detail&quot;: &quot;Run validators and capture receipt.&quot;,
+          &quot;title&quot;: &quot;Validate execution&quot;
+        }
+      ],
+      &quot;summary&quot;: &quot;Plan for write_file with 2 candidate branches.&quot;
+    }
+  },
+  {
+    &quot;actor&quot;: &quot;arc-policy&quot;,
+    &quot;created_at&quot;: &quot;2026-04-03T23:21:05.198605+00:00&quot;,
+    &quot;event_id&quot;: &quot;faf017ca-9214-4e6a-8f3f-fb87546a6106&quot;,
+    &quot;kind&quot;: &quot;policy_decision&quot;,
+    &quot;parent_event_id&quot;: &quot;d629e304-23c3-43c6-ad00-24b262e53197&quot;,
+    &quot;payload&quot;: {
+      &quot;created_at&quot;: &quot;2026-04-03T23:21:05.198512+00:00&quot;,
+      &quot;decided_by&quot;: &quot;arc-policy&quot;,
+      &quot;decision&quot;: &quot;approve&quot;,
+      &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+      &quot;reason&quot;: &quot;Action approved under current policy.&quot;
+    }
+  },
+  {
+    &quot;actor&quot;: &quot;lucifer-runtime&quot;,
+    &quot;created_at&quot;: &quot;2026-04-03T23:21:05.200127+00:00&quot;,
+    &quot;event_id&quot;: &quot;a15e05c3-ac8e-41b1-a30c-1b3f248d8431&quot;,
+    &quot;kind&quot;: &quot;execution&quot;,
+    &quot;parent_event_id&quot;: &quot;d629e304-23c3-43c6-ad00-24b262e53197&quot;,
+    &quot;payload&quot;: {
+      &quot;action&quot;: &quot;write_file&quot;,
+      &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+      &quot;success&quot;: true
+    }
+  },
+  {
+    &quot;actor&quot;: &quot;lucifer-runtime&quot;,
+    &quot;created_at&quot;: &quot;2026-04-03T23:21:05.200494+00:00&quot;,
+    &quot;event_id&quot;: &quot;f821c785-8a7a-451f-beba-9450489cd0fc&quot;,
+    &quot;kind&quot;: &quot;receipt&quot;,
+    &quot;parent_event_id&quot;: &quot;d629e304-23c3-43c6-ad00-24b262e53197&quot;,
+    &quot;payload&quot;: {
+      &quot;created_at&quot;: &quot;2026-04-03T23:21:05.200419+00:00&quot;,
+      &quot;outputs&quot;: {
+        &quot;bytes&quot;: 16,
+        &quot;path&quot;: &quot;smoke.txt&quot;,
+        &quot;undo&quot;: {
+          &quot;action&quot;: &quot;restore_file&quot;,
+          &quot;content&quot;: &quot;hello from smoke&quot;,
+          &quot;existed&quot;: true,
+          &quot;path&quot;: &quot;smoke.txt&quot;
+        },
+        &quot;written&quot;: true
+      },
+      &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+      &quot;receipt_id&quot;: &quot;b90912ad-9c5c-4aff-8307-62be61ff7eb4&quot;,
+      &quot;success&quot;: true,
+      &quot;validator_results&quot;: [
+        {
+          &quot;passed&quot;: true,
+          &quot;validator&quot;: &quot;execution_success&quot;
+        },
+        {
+          &quot;passed&quot;: true,
+          &quot;validator&quot;: &quot;path_returned&quot;
+        }
+      ]
+    }
+  },
+  {
+    &quot;actor&quot;: &quot;evaluator&quot;,
+    &quot;created_at&quot;: &quot;2026-04-03T23:21:05.200823+00:00&quot;,
+    &quot;event_id&quot;: &quot;4b14f950-cbdc-4c68-be8f-ccfee089175f&quot;,
+    &quot;kind&quot;: &quot;evaluation&quot;,
+    &quot;parent_event_id&quot;: &quot;d629e304-23c3-43c6-ad00-24b262e53197&quot;,
+    &quot;payload&quot;: {
+      &quot;all_validators_passed&quot;: true,
+      &quot;kind&quot;: &quot;execution_evaluation&quot;,
+      &quot;proposal_id&quot;: &quot;96b401fd-1b56-4ddc-84cf-0f3e39e02491&quot;,
+      &quot;result_keys&quot;: [
+        &quot;bytes&quot;,
+        &quot;path&quot;,
+        &quot;undo&quot;,
+        &quot;written&quot;
+      ],
+      &quot;validator_pass_rate&quot;: 1.0
+    }
+  },
+  {
+    &quot;actor&quot;: &quot;operator&quot;,
+    &quot;created_at&quot;: &quot;2026-04-03T23:21:08.160322+00:00&quot;,
+    &quot;event_id&quot;: &quot;3da0f68e-e2dd-44ed-a55f-74d61bf6da69&quot;,
+    &quot;kind&quot;: &quot;input&quot;,
+    &quot;parent_event_id&quot;: null,
+    &quot;payload&quot;: {
+      &quot;confirm&quot;: false,
+      &quot;text&quot;: &quot;read smoke.txt&quot;
+    }
+  },
+  {
+    &quot;actor&quot;: &quot;lucifer-runtime&quot;,
+    &quot;created_at&quot;: &quot;2026-04-03T23:21:08.161583+00:00&quot;,
+    &quot;event_id&quot;: &quot;1e7ab08e-999f-42bf-8d07-f7e0fd5e8c1b&quot;,
+    &quot;kind&quot;: &quot;proposal&quot;,
+    &quot;parent_event_id&quot;: &quot;3da0f68e-e2dd-44ed-a55f-74d61bf6da69&quot;,
+    &quot;payload&quot;: {
+      &quot;action&quot;: &quot;read_file&quot;,
+      &quot;capability&quot;: {
+        &quot;description&quot;: &quot;Read-only filesystem access&quot;,
+        &quot;dry_run_supported&quot;: true,
+        &quot;name&quot;: &quot;filesystem.read&quot;,
+        &quot;requires_confirmation&quot;: false,
+        &quot;risk&quot;: &quot;low&quot;,
+        &quot;side_effects&quot;: [],
+        &quot;validators&quot;: []
+      },
+      &quot;created_at&quot;: &quot;2026-04-03T23:21:08.161457+00:00&quot;,
+      &quot;params&quot;: {
+        &quot;path&quot;: &quot;smoke.txt&quot;
+      },
+      &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+      &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+      &quot;rationale&quot;: &quot;Routed from intent type: read_file&quot;
+    }
+  },
+  {
+    &quot;actor&quot;: &quot;branch-planner&quot;,
+    &quot;created_at&quot;: &quot;2026-04-03T23:21:08.162188+00:00&quot;,
+    &quot;event_id&quot;: &quot;c546f9ec-c889-489d-be04-abc2539744eb&quot;,
+    &quot;kind&quot;: &quot;branch_plan&quot;,
+    &quot;parent_event_id&quot;: &quot;1e7ab08e-999f-42bf-8d07-f7e0fd5e8c1b&quot;,
+    &quot;payload&quot;: {
+      &quot;candidates&quot;: [
+        {
+          &quot;branch_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac:execute&quot;,
+          &quot;proposal&quot;: {
+            &quot;action&quot;: &quot;read_file&quot;,
+            &quot;capability&quot;: {
+              &quot;description&quot;: &quot;Read-only filesystem access&quot;,
+              &quot;dry_run_supported&quot;: true,
+              &quot;name&quot;: &quot;filesystem.read&quot;,
+              &quot;requires_confirmation&quot;: false,
+              &quot;risk&quot;: &quot;low&quot;,
+              &quot;side_effects&quot;: [],
+              &quot;validators&quot;: []
+            },
+            &quot;created_at&quot;: &quot;2026-04-03T23:21:08.161457+00:00&quot;,
+            &quot;params&quot;: {
+              &quot;path&quot;: &quot;smoke.txt&quot;
+            },
+            &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+            &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+            &quot;rationale&quot;: &quot;Routed from intent type: read_file&quot;
+          },
+          &quot;reasoning&quot;: &quot;Proceed directly when policy permits and operator confirms.&quot;,
+          &quot;score&quot;: 0.8,
+          &quot;title&quot;: &quot;Read File (Execute)&quot;
+        },
+        {
+          &quot;branch_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac:dryrun&quot;,
+          &quot;proposal&quot;: {
+            &quot;action&quot;: &quot;read_file&quot;,
+            &quot;capability&quot;: {
+              &quot;description&quot;: &quot;Read-only filesystem access&quot;,
+              &quot;dry_run_supported&quot;: true,
+              &quot;name&quot;: &quot;filesystem.read&quot;,
+              &quot;requires_confirmation&quot;: false,
+              &quot;risk&quot;: &quot;low&quot;,
+              &quot;side_effects&quot;: [],
+              &quot;validators&quot;: []
+            },
+            &quot;created_at&quot;: &quot;2026-04-03T23:21:08.161457+00:00&quot;,
+            &quot;params&quot;: {
+              &quot;dry_run&quot;: true,
+              &quot;path&quot;: &quot;smoke.txt&quot;
+            },
+            &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+            &quot;proposed_by&quot;: &quot;lucifer-runtime&quot;,
+            &quot;rationale&quot;: &quot;Routed from intent type: read_file&quot;
+          },
+          &quot;reasoning&quot;: &quot;Prefer observable, non-destructive path first.&quot;,
+          &quot;score&quot;: 0.75,
+          &quot;title&quot;: &quot;Read File (Dry Run)&quot;
+        }
+      ],
+      &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;
+    }
+  },
+  {
+    &quot;actor&quot;: &quot;planner&quot;,
+    &quot;created_at&quot;: &quot;2026-04-03T23:21:08.162551+00:00&quot;,
+    &quot;event_id&quot;: &quot;ec7b02cb-407e-4ef0-9ea5-c52990d0fc04&quot;,
+    &quot;kind&quot;: &quot;evaluation&quot;,
+    &quot;parent_event_id&quot;: &quot;1e7ab08e-999f-42bf-8d07-f7e0fd5e8c1b&quot;,
+    &quot;payload&quot;: {
+      &quot;kind&quot;: &quot;plan_summary&quot;,
+      &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+      &quot;steps&quot;: [
+        {
+          &quot;branch_score&quot;: 0.8,
+          &quot;detail&quot;: &quot;Routed from intent type: read_file&quot;,
+          &quot;title&quot;: &quot;Inspect proposal&quot;
+        },
+        {
+          &quot;branch_score&quot;: 0.8,
+          &quot;detail&quot;: &quot;Prefer highest-scoring safe branch first.&quot;,
+          &quot;title&quot;: &quot;Select branch&quot;
+        },
+        {
+          &quot;branch_score&quot;: 1.0,
+          &quot;detail&quot;: &quot;Run validators and capture receipt.&quot;,
+          &quot;title&quot;: &quot;Validate execution&quot;
+        }
+      ],
+      &quot;summary&quot;: &quot;Plan for read_file with 2 candidate branches.&quot;
+    }
+  },
+  {
+    &quot;actor&quot;: &quot;arc-policy&quot;,
+    &quot;created_at&quot;: &quot;2026-04-03T23:21:08.162984+00:00&quot;,
+    &quot;event_id&quot;: &quot;967c8ca6-d7df-45ee-99e9-716148c3b6e5&quot;,
+    &quot;kind&quot;: &quot;policy_decision&quot;,
+    &quot;parent_event_id&quot;: &quot;1e7ab08e-999f-42bf-8d07-f7e0fd5e8c1b&quot;,
+    &quot;payload&quot;: {
+      &quot;created_at&quot;: &quot;2026-04-03T23:21:08.162868+00:00&quot;,
+      &quot;decided_by&quot;: &quot;arc-policy&quot;,
+      &quot;decision&quot;: &quot;approve&quot;,
+      &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+      &quot;reason&quot;: &quot;Action approved under current policy.&quot;
+    }
+  },
+  {
+    &quot;actor&quot;: &quot;lucifer-runtime&quot;,
+    &quot;created_at&quot;: &quot;2026-04-03T23:21:08.163973+00:00&quot;,
+    &quot;event_id&quot;: &quot;823369ad-93e8-433f-a429-ff6479c019a4&quot;,
+    &quot;kind&quot;: &quot;execution&quot;,
+    &quot;parent_event_id&quot;: &quot;1e7ab08e-999f-42bf-8d07-f7e0fd5e8c1b&quot;,
+    &quot;payload&quot;: {
+      &quot;action&quot;: &quot;read_file&quot;,
+      &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+      &quot;success&quot;: true
+    }
+  },
+  {
+    &quot;actor&quot;: &quot;lucifer-runtime&quot;,
+    &quot;created_at&quot;: &quot;2026-04-03T23:21:08.164660+00:00&quot;,
+    &quot;event_id&quot;: &quot;4a29f302-8dbe-4b8b-904e-b02ef5d2b600&quot;,
+    &quot;kind&quot;: &quot;receipt&quot;,
+    &quot;parent_event_id&quot;: &quot;1e7ab08e-999f-42bf-8d07-f7e0fd5e8c1b&quot;,
+    &quot;payload&quot;: {
+      &quot;created_at&quot;: &quot;2026-04-03T23:21:08.164579+00:00&quot;,
+      &quot;outputs&quot;: {
+        &quot;content&quot;: &quot;hello from smoke&quot;,
+        &quot;path&quot;: &quot;smoke.txt&quot;
+      },
+      &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+      &quot;receipt_id&quot;: &quot;c500b86f-43d9-46f0-bfee-a5b3a67cc3c3&quot;,
+      &quot;success&quot;: true,
+      &quot;validator_results&quot;: [
+        {
+          &quot;passed&quot;: true,
+          &quot;validator&quot;: &quot;execution_success&quot;
+        },
+        {
+          &quot;passed&quot;: true,
+          &quot;validator&quot;: &quot;path_returned&quot;
+        }
+      ]
+    }
+  },
+  {
+    &quot;actor&quot;: &quot;evaluator&quot;,
+    &quot;created_at&quot;: &quot;2026-04-03T23:21:08.164941+00:00&quot;,
+    &quot;event_id&quot;: &quot;8303b1da-eb2a-455c-b111-a35f04d30f34&quot;,
+    &quot;kind&quot;: &quot;evaluation&quot;,
+    &quot;parent_event_id&quot;: &quot;1e7ab08e-999f-42bf-8d07-f7e0fd5e8c1b&quot;,
+    &quot;payload&quot;: {
+      &quot;all_validators_passed&quot;: true,
+      &quot;kind&quot;: &quot;execution_evaluation&quot;,
+      &quot;proposal_id&quot;: &quot;3238a274-fb64-429a-9870-f6267df8cdac&quot;,
+      &quot;result_keys&quot;: [
+        &quot;content&quot;,
+        &quot;path&quot;
+      ],
+      &quot;validator_pass_rate&quot;: 1.0
+    }
+  },
+  {
+    &quot;actor&quot;: &quot;self-improve&quot;,
+    &quot;created_at&quot;: &quot;2026-04-03T23:21:19.929134+00:00&quot;,
+    &quot;event_id&quot;: &quot;a1988751-3975-4cf2-9b13-0f92a925b2d8&quot;,
+    &quot;kind&quot;: &quot;evaluation&quot;,
+    &quot;parent_event_id&quot;: null,
+    &quot;payload&quot;: {
+      &quot;kind&quot;: &quot;benchmark_run&quot;,
+      &quot;pass_rate&quot;: 1.0,
+      &quot;passed&quot;: 3,
+      &quot;results&quot;: [
+        {
+          &quot;detail&quot;: &quot;write command should succeed&quot;,
+          &quot;name&quot;: &quot;write_file&quot;,
+          &quot;passed&quot;: true
+        },
+        {
+          &quot;detail&quot;: &quot;read should return written content&quot;,
+          &quot;name&quot;: &quot;read_file&quot;,
+          &quot;passed&quot;: true
+        },
+        {
+          &quot;detail&quot;: &quot;runtime should record receipts during benchmark&quot;,
+          &quot;name&quot;: &quot;state_persistence&quot;,
+          &quot;passed&quot;: true
+        }
+      ],
+      &quot;suite&quot;: &quot;smoke&quot;,
+      &quot;total&quot;: 3
+    }
+  },
+  {
+    &quot;actor&quot;: &quot;self-improve&quot;,
+    &quot;created_at&quot;: &quot;2026-04-03T23:21:22.731681+00:00&quot;,
+    &quot;event_id&quot;: &quot;d34a497f-3c9f-4944-ac45-0ab0091ed49b&quot;,
+    &quot;kind&quot;: &quot;evaluation&quot;,
+    &quot;parent_event_id&quot;: null,
+    &quot;payload&quot;: {
+      &quot;kind&quot;: &quot;self_improve_analysis&quot;,
+      &quot;status&quot;: &quot;ok&quot;,
+      &quot;summary&quot;: {
+        &quot;benchmark_count&quot;: 2,
+        &quot;fallback_count&quot;: 0,
+        &quot;mirrored_memory_count&quot;: 0,
+        &quot;model_run_count&quot;: 0,
+        &quot;proposal_count&quot;: 4,
+        &quot;receipt_count&quot;: 4,
         &quot;target_count&quot;: 2
       },
       &quot;targets&quot;: [
