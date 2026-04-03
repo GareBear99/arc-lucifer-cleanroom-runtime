@@ -1,0 +1,2 @@
+[console_scripts]
+lucifer = lucifer_runtime.cli:main
