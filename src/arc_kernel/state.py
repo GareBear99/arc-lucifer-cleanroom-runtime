@@ -27,6 +27,12 @@ class ProjectedState:
     improvement_runs: List[Dict[str, Any]] = field(default_factory=list)
     code_edits: List[Dict[str, Any]] = field(default_factory=list)
     fallback_events: List[Dict[str, Any]] = field(default_factory=list)
+    fixnet_cases: List[Dict[str, Any]] = field(default_factory=list)
+    fixnet_archives: List[Dict[str, Any]] = field(default_factory=list)
+    trust_profiles: List[Dict[str, Any]] = field(default_factory=list)
+    curriculum_updates: List[Dict[str, Any]] = field(default_factory=list)
+    directives: List[Dict[str, Any]] = field(default_factory=list)
+    continuity_events: List[Dict[str, Any]] = field(default_factory=list)
     pending_confirmations: List[str] = field(default_factory=list)
     completed_proposals: List[str] = field(default_factory=list)
     denied_proposals: List[str] = field(default_factory=list)
@@ -85,6 +91,18 @@ class StateProjector:
                     state.code_edits.append(event.payload)
                 elif kind == 'fallback_event':
                     state.fallback_events.append(event.payload)
+                elif kind in {'fixnet_case','fixnet_fix'}:
+                    state.fixnet_cases.append(event.payload)
+                elif kind == 'fixnet_embedded_archive':
+                    state.fixnet_archives.append(event.payload)
+                elif kind == 'tool_trust':
+                    state.trust_profiles.append(event.payload)
+                elif kind == 'curriculum_memory':
+                    state.curriculum_updates.append(event.payload)
+                elif kind == 'directive_ledger':
+                    state.directives.append(event.payload)
+                elif kind in {'continuity_boot', 'continuity_heartbeat'}:
+                    state.continuity_events.append(event.payload)
             elif event.kind == EventKind.MEMORY_UPDATE:
                 state.memory_updates.append(event.payload)
                 if event.payload.get('kind') == 'archive_created':
@@ -137,5 +155,18 @@ class StateProjector:
             'retired_memory_count': retired_count,
             'mirrored_memory_headers': mirrored_headers[-20:],
             'top_memory_keywords': top_memory_keywords,
+            'fixnet_case_count': len(state.fixnet_cases),
+            'fixnet_archive_count': len(state.fixnet_archives),
+            'recent_fixnet_cases': state.fixnet_cases[-10:],
+            'recent_fixnet_archives': state.fixnet_archives[-10:],
+            'tool_trust_profile_count': len(state.trust_profiles),
+            'recent_tool_trust_profiles': state.trust_profiles[-10:],
+            'curriculum_update_count': len(state.curriculum_updates),
+            'recent_curriculum_updates': state.curriculum_updates[-10:],
+            'directive_count': len(state.directives),
+            'active_directive_count': sum(1 for item in state.directives if item.get('status') == 'active'),
+            'recent_directives': state.directives[-10:],
+            'continuity_event_count': len(state.continuity_events),
+            'recent_continuity_events': state.continuity_events[-10:],
         }
         return state

@@ -23,13 +23,24 @@ src/code_editing/planner.py
 src/code_editing/symbol_index.py
 src/code_editing/verifier.py
 src/cognition_services/__init__.py
+src/cognition_services/directives.py
 src/cognition_services/evaluator.py
 src/cognition_services/goal_engine.py
 src/cognition_services/persistent_loop.py
 src/cognition_services/planner.py
+src/cognition_services/shadow.py
+src/cognition_services/trust.py
 src/cognition_services/world_model.py
 src/dashboards/monitor.py
 src/dashboards/trace_viewer.py
+src/fixnet/__init__.py
+src/fixnet/archive.py
+src/fixnet/consensus.py
+src/fixnet/integration.py
+src/fixnet/ledger.py
+src/fixnet/models.py
+src/fixnet/novelty.py
+src/fixnet/publisher.py
 src/lucifer_runtime/__init__.py
 src/lucifer_runtime/cli.py
 src/lucifer_runtime/config.py
@@ -38,6 +49,7 @@ src/lucifer_runtime/runtime.py
 src/lucifer_runtime/tools.py
 src/memory_subsystem/__init__.py
 src/memory_subsystem/archive.py
+src/memory_subsystem/curriculum.py
 src/memory_subsystem/manager.py
 src/memory_subsystem/records.py
 src/memory_subsystem/retention.py
@@ -49,6 +61,7 @@ src/model_services/local_stub.py
 src/model_services/profiles.py
 src/resilience/__init__.py
 src/resilience/continuation_manager.py
+src/resilience/continuity_shell.py
 src/resilience/failure_classifier.py
 src/resilience/fallback_policy.py
 src/resilience/fallback_selector.py
@@ -74,6 +87,10 @@ tests/test_cli_and_budget_fix.py
 tests/test_cli_model_prompt.py
 tests/test_cli_production_hardening.py
 tests/test_code_editing_and_promotion.py
+tests/test_directives_and_continuity.py
+tests/test_fixnet_archive.py
+tests/test_fixnet_core.py
+tests/test_goal_shadow_and_promotion_court.py
 tests/test_llamafile_streaming.py
 tests/test_memory_mirror.py
 tests/test_memory_retention.py
@@ -90,3 +107,4 @@ tests/test_self_improve_cycle.py
 tests/test_self_improve_plan_and_scaffold.py
 tests/test_shell_budget.py
 tests/test_tool_adapters.py
+tests/test_trust_curriculum_and_fixnet_sync.py

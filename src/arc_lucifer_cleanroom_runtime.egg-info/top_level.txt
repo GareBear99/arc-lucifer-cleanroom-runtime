@@ -2,6 +2,7 @@ arc_kernel
 code_editing
 cognition_services
 dashboards
+fixnet
 lucifer_runtime
 memory_subsystem
 model_services
