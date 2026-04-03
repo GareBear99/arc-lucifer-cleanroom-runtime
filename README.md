@@ -1,88 +1,250 @@
-# 📜 ARC Lucifer Cleanroom Runtime
+# ARC Lucifer Cleanroom Runtime
 
-A clean-room, local-first operator runtime that combines:
-- **ARC Kernel** for event authority, policy, receipts, replay, rollback, branching, and persistent state
-- **Lucifer Runtime** for terminal routing, command handling, tool execution, and resilience/fallbacks
-- **Cognition Services** for goals, world-model views, planning, evaluation, and persistent loop behavior
-- **Managed local-model execution** through llamafile and open-ended model profiles
-- **Memory tiers** with mirror-then-retire archival and ranked retrieval
-- **Self-improvement runs** with sandboxed candidate generation, scoring, validation, promotion, and adversarial testing
-- **Directive + continuity shell** for persistent mission state, boot receipts, heartbeats, and primary/fallback mode tracking
-- **FixNet repair intelligence** for fix storage, trust/consensus, novelty filtering, semantic fix lineage, and archive-visible mirrors
+[![CI](https://img.shields.io/badge/CI-passing-brightgreen)](#validation)
+[![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue)](#quick-start)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE.md)
 
-## What this is
+A **deterministic local-first AI operator runtime** for building a persistent shell around a replaceable local model.
 
-This repo is not a generic chat wrapper.
-It is a **persistent local operator runtime** designed around an enduring shell and a replaceable cognition core.
+This repository combines a durable runtime spine with receipts, replay, rollback, policy decisions, ranked memory, archive lineage, exact code editing, self-improvement loops, and a repair-intelligence layer called **FixNet**.
 
-The intended architecture is:
-- **directive shell** for long-lived operator intent
-- **GGUF / local model core** for reasoning and planning
-- **deterministic runtime spine** for receipts, replay, rollback, and policy
-- **fallback continuity mode** for degraded operation
-- **FixNet repair graph** for reusable failure-to-solution knowledge
-- **archive lineage** for mirror-then-retire historical memory
+Perception, robotics, multimodal, and embodiment layers are treated as **optional adapters**. The core runtime remains useful and installable without cameras, microphones, robot drivers, or GPU-heavy vision stacks, while still giving you a clean path to attach them when you want them.
 
-## Current package state (v2.10.3)
+It is aimed at people searching for:
+- local AI runtime
+- GGUF agent framework
+- deterministic AI operator
+- persistent AI shell
+- terminal AI runtime
+- local coding agent foundation
+- replayable AI workflow engine
+- archival memory system for AI agents
+- self-improving local agent architecture
+- clean-room operator runtime for Python
 
-This build includes:
+## Table of contents
+
+- [What this repository is](#what-this-repository-is)
+- [Why it exists](#why-it-exists)
+- [Current package state](#current-package-state-v2104)
+- [Direction goals](#direction-goals)
+- [What makes it different](#what-makes-it-different)
+- [Architecture walkthrough](#architecture-walkthrough)
+- [How the runtime actually works](#how-the-runtime-actually-works)
+- [Repository walkthrough](#repository-walkthrough)
+- [Quick start](#quick-start)
+- [Common commands](#common-commands)
+- [Examples walkthrough](#examples-walkthrough)
+- [Self-improvement workflow](#self-improvement-workflow)
+- [Memory and archive model](#memory-and-archive-model)
+- [FixNet repair intelligence](#fixnet-repair-intelligence)
+- [How to visualize it working](#how-to-visualize-it-working)
+- [Validation](#validation)
+- [Documentation map](#documentation-map)
+- [Comparison snapshot](#comparison-snapshot)
+- [Production posture](#production-posture)
+- [SEO and discoverability notes](#seo-and-discoverability-notes)
+- [License](#license)
+
+## What this repository is
+
+ARC Lucifer Cleanroom Runtime is a **persistent local operator runtime** built around these ideas:
+- a long-lived directive shell
+- a replaceable cognition core such as a local GGUF / llamafile-backed model
+- deterministic execution with receipts and replayable state transitions
+- resilient fallback modes instead of silent failure
+- memory that can stay live, mirror early into archive, and retire on schedule
+- repair knowledge that compounds across incidents rather than disappearing into logs
+
+This is **not** a generic chat wrapper and **not** a claim of solved AGI. It is a serious software foundation for building a governed, local-first intelligence shell. It is also intentionally designed so future vision, robotics, audio, simulator, and desktop-control layers can be attached as optional services instead of becoming hard requirements for every install.
+
+## Why it exists
+
+Most public agent systems are optimized for fast coding productivity, cloud workflows, or short-lived sessions.
+
+This project is aimed at a different center of gravity:
+
+> a persistent, directive-bound, local-first runtime with a replaceable reasoning core and a deterministic operational spine
+
+The runtime identity comes from directives, doctrine, runtime state, memory lineage, repair lineage, and the attached cognition/model layer. That means continuity does not disappear when one model run ends.
+
+## Current package state (v2.10.5)
+
+This repository currently includes:
 - persistent shared SQLite-backed kernel state
 - deterministic file, shell, and code-edit operator flows
-- exact line/symbol-grounded code editing for Python
-- managed local llamafile prompt path with tracked receipts
+- exact line-range and symbol-grounded code editing for Python
+- managed local-model execution via llamafile-oriented flows
 - rollback, replay, evaluations, policy decisions, and fallback histories
-- hot/warm/archive memory with early archive mirroring and ranked memory search
-- self-improvement analysis, planning, scaffolding, candidate generation, scoring, best-candidate execution, promotion review, and adversarial fault injection
-- goal compilation into constraints, invariants, success metrics, abort conditions, evidence requirements, and archive mode
-- shadow predicted-vs-actual comparison
+- hot, warm, and archive memory tiers with early archive mirroring and ranked search
+- self-improvement analysis, planning, scaffolding, candidate generation, scoring, review, promotion, and adversarial fault injection
+- goal compilation into constraints, invariants, abort conditions, evidence requirements, and archive mode
+- shadow predicted-vs-actual comparison flows
 - tool trust tracking and curriculum-memory updates
 - directive ledger, continuity boot receipts, heartbeats, and primary/fallback mode tracking
-- FixNet repair intelligence with semantic fix-to-fix lineage and embedded archive mirrors
+- FixNet repair intelligence with semantic fix lineage and archive-visible mirrors
 - operator commands for monitor, info, doctor, export/import, backup, compact, and failures
 - bootstrap, smoke-test, and release-check scripts
+- docs, examples, tests, and packaging metadata for local development and public GitHub release
+- optional adapter contracts for future perception and embodiment surfaces without requiring those stacks by default
 
-## Production posture
+## Direction goals
 
-This repo is production-ready as a **technical operator/runtime foundation**.
-It is **not** claiming solved AGI.
+The public direction is now explicit:
+- keep the core runtime lightweight, deterministic, and useful on its own
+- make multimodal perception and robotics **optional capabilities**, not mandatory dependencies
+- let a replaceable GGUF or local-model core reason over structured world state instead of raw sensor noise
+- preserve receipts, replay, memory lineage, and safety checks even when richer adapters are enabled
+- present the repo honestly as a real autonomy foundation rather than pretending the current code is a finished living machine
 
-What still sits outside repo-only completion:
-- long-run soak testing on target hardware
-- real GGUF quality comparisons and routing policy tuning
-- signed installer and end-user packaging
-- proving safe long-duration autonomy under real workloads
-- optional remote publisher/sync against real remotes
+## What makes it different
 
-## Why this exists
+### 1. Deterministic runtime spine
+The runtime tracks decisions and actions through receipts, replay, rollback, and policy events rather than treating everything as an opaque model transcript.
 
-Most commercial systems in this space are optimized for **coding-agent productivity**.
-This repo is aimed at a different shape:
+### 2. Directive-first continuity
+The shell is meant to persist beyond a single model run. Directives, continuity status, and fallback tracking give the system durable intent.
 
-**an enduring, directive-bound, local-first intelligence shell with a swappable cognition core**.
+### 3. Memory with archive lineage
+Memory can mirror into archive early, stay live until retirement, and keep readable metadata for later ranked retrieval.
 
-That means the runtime identity comes from:
-- directives
-- doctrine/policy
-- event spine
-- memory/archive lineage
-- repair knowledge
-- current cognition core
+### 4. Repair intelligence via FixNet
+Fixes are promoted into reusable repair knowledge with lineage, consensus, novelty filtering, and archive mirrors.
 
-not from a single stateless model session.
+### 5. Local-first model openness
+The cognition layer is intentionally open-ended. You can use current local-model flows now and still keep the runtime architecture ready for future backends or custom GGUF work later.
+
+## Architecture walkthrough
+
+The core flow looks like this:
+
+```text
+DIRECTIVES
+   ↓
+CONTINUITY / BOOT
+   ↓
+WORLD + MEMORY STATE
+   ↓
+GOAL COMPILE / PLANNING
+   ↓
+ACTION / TOOL EXECUTION
+   ↓
+RECEIPT / RESULT
+   ↓
+VERIFY / COMPARE / EVALUATE
+   ↓
+TRUST / CURRICULUM / FIXNET
+   ↓
+ARCHIVE / CONTINUITY UPDATE
+   ↺
+```
+
+### Main subsystems
+
+#### ARC Kernel
+Handles event authority, policy, receipts, replay, rollback, branching, and persistent shared state.
+
+#### Lucifer Runtime
+Provides terminal routing, CLI commands, execution helpers, runtime config, and resilience-aware command handling.
+
+#### Cognition Services
+Provides goal management, planning, world-model views, evaluator logic, shadow comparison, directives, and persistent-loop behavior.
+
+#### Perception Adapters
+Defines optional contracts for vision, audio, simulator, desktop-capture, and other sensor pipelines so raw input can be turned into structured observations without forcing heavyweight dependencies on the base install.
+
+#### Memory Subsystem
+Implements hot, warm, and archive memory tiers, ranking, mirror-then-retire archival behavior, and readable metadata surfaces.
+
+#### Self Improve
+Runs deterministic improvement loops with analysis, planning, scaffolding, candidate generation, scoring, validation, promotion review, and adversarial fault injection.
+
+#### Code Editing
+Supports exact range replacement, symbol-grounded edits, line mapping, patch validation, and code-level planning.
+
+#### FixNet
+Stores fix objects, lineage, novelty checks, consensus, and archive mirrors so repair knowledge compounds over time.
+
+#### Verifier / Dashboards / Resilience
+Support health checks, monitoring, validation, doctor flows, trace inspection, and fallback-oriented operations.
+
+## How the runtime actually works
+
+1. **You define directives or operator goals.**
+2. **The runtime compiles intent into bounded work.** Goals become constraints, invariants, evidence requirements, and stop conditions.
+3. **The shell executes through controlled adapters.** File, shell, code-edit, model, and optional perception/action adapters are routed through runtime policy rather than free-form mutation.
+4. **Every action produces evidence.** Receipts, events, traces, and evaluation results are stored so work can be audited and replayed.
+5. **Outcomes are compared and scored.** Shadow logic, evaluators, and validators compare intended results against actual results.
+6. **Memory and repair surfaces are updated.** Ranked memory, curriculum updates, and FixNet entries accumulate operational knowledge.
+7. **The runtime continues.** State, directives, fallback status, and archive lineage persist across runs.
+
+That is the main point of the project: a local operator runtime that can keep operating with continuity instead of acting like a disposable one-shot chat session.
+
+## Repository walkthrough
+
+```text
+src/
+  arc_kernel/           core event, policy, state, replay, rollback logic
+  lucifer_runtime/      CLI, router, runtime config, command surfaces
+  cognition_services/   directives, goals, planner, evaluator, shadow, trust
+  memory_subsystem/     memory tiers, ranking, archival behavior
+  self_improve/         analysis, candidate generation, scoring, review, promotion
+  code_editing/         line/symbol grounded patch workflows
+  fixnet/               repair lineage, novelty filtering, fix archive mirrors
+  verifier/             verification and health surfaces
+  dashboards/           monitor and trace visualization helpers
+  model_services/       model-profile and local model integration surfaces
+  perception_adapters/  optional vision/audio/robotics adapter contracts
+  resilience/           fallback, continuity, and runtime hardening helpers
+
+docs/                   architecture, comparisons, upgrade notes, memory docs
+examples/               runnable examples for runtime, loop, memory, llamafile flow
+tests/                  automated validation coverage
+scripts/                bootstrap, smoke, and release-check scripts
+assets/                 public preview assets
+```
 
 ## Quick start
 
+### 1. Create a virtual environment
+
 ```bash
-/usr/local/bin/python3.13 -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -U pip
-python -m pip install -e .
+```
+
+### 2. Install the repo in editable mode
+
+```bash
+python -m pip install -e .[dev]
+```
+
+### 3. Run tests and smoke validation
+
+```bash
 pytest -q
-./scripts/smoke.sh
+bash scripts/smoke.sh
+```
+
+### 4. Explore the CLI
+
+```bash
 PYTHONPATH=src python -m lucifer_runtime.cli commands
 ```
 
+### 5. Optional shortcuts
+
+```bash
+make install
+make test
+make smoke
+make release-check
+```
+
 ## Common commands
+
+### Runtime and health
 
 ```bash
 PYTHONPATH=src python -m lucifer_runtime.cli commands
@@ -91,225 +253,171 @@ PYTHONPATH=src python -m lucifer_runtime.cli info
 PYTHONPATH=src python -m lucifer_runtime.cli doctor
 PYTHONPATH=src python -m lucifer_runtime.cli monitor --watch 2 --iterations 5
 PYTHONPATH=src python -m lucifer_runtime.cli failures
-PYTHONPATH=src python -m lucifer_runtime.cli memory status
-PYTHONPATH=src python -m lucifer_runtime.cli memory search "archive mirror"
-PYTHONPATH=src python -m lucifer_runtime.cli bench
 ```
 
-## Directive and continuity commands
+### Persistence, replay, and repair
 
 ```bash
-PYTHONPATH=src python -m lucifer_runtime.cli directive add "Preserve continuity and never silently fail" --priority 10
-PYTHONPATH=src python -m lucifer_runtime.cli directive stats
-PYTHONPATH=src python -m lucifer_runtime.cli continuity boot
-PYTHONPATH=src python -m lucifer_runtime.cli continuity heartbeat
-PYTHONPATH=src python -m lucifer_runtime.cli continuity status
+PYTHONPATH=src python -m lucifer_runtime.cli export runtime-export.json
+PYTHONPATH=src python -m lucifer_runtime.cli backup backups/
+PYTHONPATH=src python -m lucifer_runtime.cli compact
+PYTHONPATH=src python -m lucifer_runtime.cli fixnet-list
+PYTHONPATH=src python -m lucifer_runtime.cli fixnet-publish "retry timeout patch"
 ```
 
-## Goal and shadow-loop commands
+### Memory and directives
 
 ```bash
-PYTHONPATH=src python -m lucifer_runtime.cli goal "Keep the runtime healthy and improve resilience" --priority 8
-PYTHONPATH=src python -m lucifer_runtime.cli shadow "Run release checks and compare expected vs actual" --predicted-status approve --confirm
+PYTHONPATH=src python -m lucifer_runtime.cli memory-list
+PYTHONPATH=src python -m lucifer_runtime.cli memory-search "fallback retry"
+PYTHONPATH=src python -m lucifer_runtime.cli directive-add "stay local-first"
+PYTHONPATH=src python -m lucifer_runtime.cli directive-list
 ```
 
-## Self-improvement commands
+## Examples walkthrough
+
+The examples folder gives you the easiest way to understand the repo in motion:
+
+- `examples/run_runtime.py` shows the base runtime loop
+- `examples/run_persistent_loop.py` shows continuity-oriented execution
+- `examples/run_memory_retention.py` shows memory tiering and retention behavior
+- `examples/run_llamafile_stream.py` shows the local-model execution path
+
+A good first pass is:
 
 ```bash
-PYTHONPATH=src python -m lucifer_runtime.cli self-improve analyze
-PYTHONPATH=src python -m lucifer_runtime.cli self-improve plan
-PYTHONPATH=src python -m lucifer_runtime.cli self-improve scaffold
-PYTHONPATH=src python -m lucifer_runtime.cli self-improve generate-candidates <run_id> --path src/file.py --replacement "..."
-PYTHONPATH=src python -m lucifer_runtime.cli self-improve score-candidates <run_id>
-PYTHONPATH=src python -m lucifer_runtime.cli self-improve best-candidate <run_id>
-PYTHONPATH=src python -m lucifer_runtime.cli self-improve review-run <run_id>
-PYTHONPATH=src python -m lucifer_runtime.cli self-improve execute-best <run_id> --promote
-PYTHONPATH=src python -m lucifer_runtime.cli self-improve inject-fault <run_id> --kind python_syntax_break --path src/file.py
-PYTHONPATH=src python -m lucifer_runtime.cli self-improve adversarial-cycle <run_id> --kind force_validation_failure --path src/file.py --replacement "..."
+PYTHONPATH=src python examples/run_runtime.py
+PYTHONPATH=src python examples/run_memory_retention.py
+PYTHONPATH=src python examples/run_persistent_loop.py
 ```
 
-## FixNet, trust, and curriculum commands
+## Optional perception and embodiment
 
-```bash
-PYTHONPATH=src python -m lucifer_runtime.cli fixnet stats
-PYTHONPATH=src python -m lucifer_runtime.cli trust stats
-PYTHONPATH=src python -m lucifer_runtime.cli curriculum stats
-```
+The repo now makes this contract explicit:
+- cameras, microphones, simulators, robot SDKs, and multimodal runtimes are **not required** to install or run the core runtime
+- when enabled, those layers should attach through bounded adapter interfaces and still feed structured state back into the same deterministic shell
+- the GGUF or local model should reason over summarized observations and world-state facts, not directly own millisecond motor control
 
-## Code-operator commands
+See:
+- `docs/vision_runtime_optional_adapters.md`
+- `src/perception_adapters/`
 
-```bash
-PYTHONPATH=src python -m lucifer_runtime.cli code index <path>
-PYTHONPATH=src python -m lucifer_runtime.cli code verify <path>
-PYTHONPATH=src python -m lucifer_runtime.cli code plan <path> "<instruction>" [--symbol name]
-PYTHONPATH=src python -m lucifer_runtime.cli code replace-range <path> <start_line> <end_line> "<replacement_text>"
-PYTHONPATH=src python -m lucifer_runtime.cli code replace-symbol <path> <symbol_name> "<replacement_text>"
-```
+## Self-improvement workflow
 
-## How to visualize the runtime
+The self-improvement system is intentionally constrained. It is designed to improve within a deterministic process rather than mutate itself blindly.
 
-Think of it as a **local command center with a replaceable brain**.
+High-level cycle:
+1. analyze the current state
+2. scaffold a bounded plan
+3. generate candidate changes
+4. score the candidates
+5. validate in a sandbox
+6. promote only passing work
+7. run adversarial or fault-injection checks on promoted paths
 
-```text
-DIRECTIVES
-   ↓
-BOOT / CONTINUITY
-   ↓
-WORLD + MEMORY STATE
-   ↓
-GOAL COMPILE / PLAN
-   ↓
-ACTION / TOOL USE
-   ↓
-RECEIPT / RESULT
-   ↓
-VERIFY / COMPARE
-   ↓
-LEARN / FIXNET / TRUST / CURRICULUM
-   ↓
-ARCHIVE / CONTINUITY UPDATE
-   ↺
-```
+Relevant source areas:
+- `src/self_improve/`
+- `src/code_editing/`
+- `src/verifier/`
 
-Typical live output looks more like an operator log than a chatbot:
+## Memory and archive model
 
-```text
-[BOOT] runtime_id=lucifer-main mode=primary status=healthy
-[DIRECTIVE] loaded 4 active directives
-[MEMORY] active=12 archived_links=31 fixnet_records=9
-[GOAL] compiled "keep runtime healthy and improve resilience"
-[PLAN] 3 candidate actions generated
-[SHADOW] predicted outcome=approve confidence=0.82
-[EXECUTE] sandbox self-improve run created: run_1042
-[PATCH] candidate_2 applied to src/runtime.py
-[VALIDATE] pytest passed
-[REVIEW] promotion court accepted
-[PROMOTE] run_1042 promoted
-[FIXNET] recorded improved_version of fix_0081
-[TRUST] self_improve_validation +0.04
-[CURRICULUM] updated recurring theme: resilience-hardening
-[ARCHIVE] mirrored fix dossier to archive branch
-[HEARTBEAT] mode=primary uptime_ok=yes
-```
+The memory subsystem is one of the repo’s distinguishing pieces.
 
-## Positioning vs current commercial tools
+It supports:
+- live memory for active operational context
+- warm memory for retained but lower-priority context
+- archive memory for durable long-term lineage
+- early archive mirroring before final retirement
+- ranked search back into retained memory
+- readable memory metadata rather than opaque vector-only storage
 
-The commercial market already has stronger product maturity in some areas.
-Public materials currently show:
-- **Devin** emphasizes long-horizon autonomous software engineering with shell, editor, and browser access in a sandboxed environment.
-- **Claude Code** emphasizes terminal-native agentic coding, codebase reading, editing, command execution, and checkpoint-style autonomy workflows.
-- **Augment Intent** emphasizes a living-spec, isolated-workspace, multi-agent orchestration model.
-
-This runtime aims at a somewhat different center of gravity: a **persistent local-first continuity shell** rather than only a coding-agent workspace.
-
-### Comparison snapshot
-
-| Capability | ARC Lucifer Cleanroom Runtime | Devin | Claude Code | Augment Intent |
-|---|---|---|---|---|
-| Long-horizon coding autonomy | Strong foundation | Strong | Strong | Strong |
-| Terminal-native operation | Yes | Partial/publicly less emphasized | Yes | Yes |
-| Sandboxed execution | Yes | Yes | Strong workflow support | Strong |
-| PR / test / review loop | Yes, repo-side | Yes | Strong workflows | Strong |
-| Persistent directive ledger | Yes | Not publicly core-positioned | Not publicly core-positioned | Living spec is the closest overlap |
-| Primary / fallback self continuity | Yes | Not publicly presented this way | Not publicly presented this way | Not publicly presented this way |
-| Append-only receipt / replay / rollback spine | Yes | Some overlap, not core-public framing | Checkpoints and rewind overlap | Some orchestration overlap |
-| FixNet-style repair graph | Yes | Not publicly shown | Not publicly shown | Not publicly shown |
-| Live archive mirroring / retirement metadata | Yes | Not publicly shown | Not publicly shown | Not publicly shown |
-| Local-first GGUF “replaceable brain” shell | Yes | No | No | Not core-positioned |
-| Enterprise product maturity | Low vs market | High | High | High |
-
-### Honest reading
-
-- Commercial products are ahead on **polish, onboarding, enterprise packaging, and validated production usage**.
-- This runtime is more distinctive on **continuity-shell architecture**, **directive persistence**, **fallback self**, **repair lineage**, and **archive lineage**.
-- The goal here is not to pretend to out-product those systems today.
-- The goal is to build a stronger **governed persistent runtime architecture** that can host local cognition over long horizons.
-
-## Memory lifecycle
-
-Memory supports:
-- early archive mirroring on demand
-- continued live/front-memory presence until scheduled retirement
-- sync from live memory into archive while live
-- final front-memory retirement at the normal archive date
-- ranked retrieval using readable memory headers: title, summary, keywords, category, importance, and status
+This makes it easier to preserve continuity while still controlling memory sprawl.
 
 ## FixNet repair intelligence
 
-FixNet is the repair-intelligence sidecar to the deterministic runtime spine.
-It separates:
-- **FixLedger** for stored fix objects and semantic fix-to-fix lineage
-- **FixConsensus** for trust, analytics, and reuse quality
-- **FixNoveltyFilter** for duplicate/variant detection before polluting the store
-- **EmbeddedFixArchive** for archive-visible mirrors of selected fixes
+FixNet is the repair-intelligence layer. Instead of treating fixes as disposable troubleshooting notes, the runtime can preserve them as reusable repair objects with lineage.
 
-The runtime auto-emits FixNet records for key self-improve outcomes so repair knowledge compounds instead of disappearing into logs.
+That includes:
+- semantic fix entries
+- novelty checks to avoid duplicate noise
+- consensus-oriented publication logic
+- archive mirrors for long-term retention
+- runtime visibility into what has already worked before
 
-## Open-ended model profiles and training export
+## How to visualize it working
 
-This runtime supports open-ended model profiles so you can keep using the
-current local llamafile path while preparing your own future GGUF-oriented model
-work.
+The easiest mental model is not “chatbot” but “operator shell with memory, policy, and repair lineage.”
 
-Examples:
+Think of it as:
+- a local command runtime
+- attached to a replaceable model backend
+- with persistent state
+- with receipts and replay
+- with bounded self-improvement
+- with ranked memory and archive lineage
+- with repair knowledge that compounds over time
 
-```bash
-PYTHONPATH=src python -m lucifer_runtime.cli model register-profile local-dev --backend-type gguf_local --binary-path /path/to/llamafile --model-path /path/to/model.gguf --activate
-PYTHONPATH=src python -m lucifer_runtime.cli model profiles
-PYTHONPATH=src python -m lucifer_runtime.cli train export-supervised --output training_corpus.jsonl
-PYTHONPATH=src python -m lucifer_runtime.cli train export-preferences --output preference_pairs.jsonl
-```
+The `monitor` command, trace surfaces, receipts, memory listing, and FixNet views are the best ways to see the system as a runtime instead of just as source code.
 
-## Repo structure
+## Validation
 
-```text
-src/arc_kernel/
-src/lucifer_runtime/
-src/cognition_services/
-src/model_services/
-src/verifier/
-src/memory_subsystem/
-src/self_improve/
-src/code_editing/
-src/resilience/
-src/dashboards/
-src/fixnet/
-src/continuity/
-src/directives/
-src/trust/
-src/curriculum/
-scripts/
-examples/
-tests/
-docs/
-```
+This repository includes real validation surfaces:
+- automated tests under `tests/`
+- smoke validation under `scripts/smoke.sh`
+- release validation under `scripts/release_check.sh`
+- package build support through `python -m build`
 
-## Release hygiene
+Recommended verification flow:
 
 ```bash
-./scripts/smoke.sh
-./scripts/release_check.sh
+pytest -q
+bash scripts/smoke.sh
+python -m build
 ```
 
-## Documentation
+## Documentation map
 
-See:
+Start here:
+- `docs/INDEX.md`
+- `docs/architecture.md`
+- `docs/doctrine.md`
+
+Then go deeper into:
+- `docs/vision_runtime_optional_adapters.md`
 - `docs/llamafile_flow.md`
-- `docs/token_counting.md`
 - `docs/memory_retention.md`
-- `docs/v2_1_code_operator.md`
-- `docs/v2_4_memory_mirror_and_stack.md`
-- `docs/v2_6_candidate_cycles.md`
+- `docs/v2_3_autonomous_patch_cycle.md`
 - `docs/v2_7_adversarial_cycles.md`
+- `docs/v2_9_model_profiles_and_training.md`
+- `docs/source_comparison.md`
+- `docs/benchmarks.md`
 
-## Current limits
+## Comparison snapshot
 
-This repo is a serious local operator-runtime foundation.
-It is not yet a proven forever-running AGI system.
+This repo is strongest where you want a governed local runtime with continuity, replay, repair lineage, and bounded operational intelligence. It is not positioned as a giant cloud orchestration platform, and it is not pretending to be a finished AGI product.
 
-The remaining real work is mostly outside markdown edits:
-- long-horizon runtime soak testing
-- actual GGUF routing and quality benchmarking
-- remote publisher hardening
-- end-user packaging and installers
-- proving safe continuous operation under real directives
+## Production posture
+
+Current honest state:
+- the repository is a strong, real software foundation
+- the runtime architecture is substantially ahead of a toy demo
+- the package is suitable for public GitHub release and local technical evaluation
+
+Still outside repo-only completion:
+- long-run soak testing on target hardware
+- model-quality comparisons across attached GGUF backends
+- real vision/robotics adapter implementations on chosen hardware stacks
+- installer/signing workflow
+- richer runtime screenshots, terminal captures, and operator demos
+- optional desktop/operator packaging
+
+## SEO and discoverability notes
+
+The README intentionally uses truthful search phrases that people actually look for, including local AI runtime, GGUF agent framework, deterministic AI operator, persistent AI shell, replayable AI workflow engine, archival memory system, and self-improving local agent architecture.
+
+That improves search relevance without drifting into misleading claims.
+
+## License
+
+Released under the MIT License. See [LICENSE.md](LICENSE.md).

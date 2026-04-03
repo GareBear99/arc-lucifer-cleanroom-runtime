@@ -4,9 +4,9 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
 python -m pip install -U pip >/dev/null
-python -m pip install -e . pytest >/dev/null
+python -m pip install -e .[dev] >/dev/null
 pytest -q
-./scripts/smoke.sh
+bash scripts/smoke.sh
 python -m lucifer_runtime.cli export --jsonl release_events.jsonl --sqlite-backup release_backup.sqlite3 >/dev/null
 
 echo "release check ok"

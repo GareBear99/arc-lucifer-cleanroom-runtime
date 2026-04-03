@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "arc-lucifer-cleanroom-runtime"
-version = "2.10.4"
-description = "Deterministic local-first AI operator runtime with receipts, replay, rollback, ranked memory, and DARPA-grade repair intelligence (FixNet)."
+version = "2.10.5"
+description = "Deterministic local-first AI operator runtime with receipts, replay, rollback, ranked memory, optional perception/robotics adapters, and FixNet repair intelligence."
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{name = "Gary Doman"}]
 license = "MIT"
 dependencies = []
-keywords = ["ai-runtime", "local-ai", "agent-runtime", "llamafile", "gguf", "deterministic-systems", "self-improvement", "persistent-memory", "rollback", "replay", "cli", "clean-room"]
+keywords = ["ai-runtime", "local-ai", "agent-runtime", "llamafile", "gguf", "deterministic-systems", "self-improvement", "persistent-memory", "rollback", "replay", "cli", "clean-room", "vision-runtime", "robotics-runtime", "multimodal-runtime"]
 classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.11",
@@ -36,6 +36,25 @@ where = ["src"]
 [project.optional-dependencies]
 dev = [
   "pytest>=8",
+]
+vision = [
+  "numpy>=1.26",
+  "Pillow>=10",
+  "opencv-python>=4.10",
+]
+audio = [
+  "numpy>=1.26",
+]
+robotics = [
+  "numpy>=1.26",
+]
+embodiment = [
+  "numpy>=1.26",
+]
+full = [
+  "numpy>=1.26",
+  "Pillow>=10",
+  "opencv-python>=4.10",
 ]
 
 [tool.pytest.ini_options]
