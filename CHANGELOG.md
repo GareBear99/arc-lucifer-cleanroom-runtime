@@ -1,11 +1,25 @@
+## v2.10.3
 
-# Changelog
+- Added first-class directive ledger with persisted operator directives, priorities, supersession, and completion state.
+- Added continuity shell with boot receipts, heartbeat tracking, watchdog health, and primary/fallback mode selection.
+- Projected directives and continuity events into runtime world state for durable observability.
+- Added CLI surfaces for `directive` and `continuity` administration.
+- Added tests for directive round-tripping, continuity boot/heartbeat behavior, and state projection.
+
+## v2.10.2
+- added structured goal compilation with constraints, invariants, evidence requirements, and archive mode
+- added shadow predicted-vs-actual comparison recording
+- added promotion-court review for self-improvement runs before promotion
+- auto-emitted FixNet records from candidate scoring and best-candidate selection
+- synced package version and README state to the current release
 
 ## v2.9.1
-- Refreshed README for the chosen public repo identity and clearer runtime positioning.
-- Added GitHub scaffolding: issue templates, PR template, release template, CI workflow, and release validation workflow.
-- Added repo metadata docs, architecture overview, social preview asset, and packaging hygiene files.
+- added FixNet dossier recording and embedded archive packs so repair intelligence can be persisted into branch-visible runtime history
+- projected FixNet case/archive counts into runtime state world model
+- added CLI support for `fixnet record` and `fixnet embed`
 
+
+# Changelog
 
 ## v2.9.0
 - Added open-ended model profile registry for GGUF/local/external backends.
