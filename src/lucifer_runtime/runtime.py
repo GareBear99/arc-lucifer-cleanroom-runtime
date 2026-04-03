@@ -10,12 +10,18 @@ from arc_kernel.schemas import Capability, Decision, EventKind, Proposal, Receip
 from verifier.validators import validate_result
 from cognition_services.planner import PlannerService
 from cognition_services.evaluator import EvaluatorService
+from cognition_services.goal_engine import GoalEngine
+from cognition_services.shadow import ShadowExecutionService
+from cognition_services.trust import ToolTrustRegistry
+from cognition_services.directives import DirectiveLedger
 from model_services import BackendRegistry, LlamafileBackend, LlamafileProcessManager, StreamEvent
 from self_improve import BenchmarkRunner, ImprovementAnalyzer, ImprovementPlanner, SandboxManager, PromotionGate, ImprovementExecutor, CandidateCycleManager, AdversarialManager
 from code_editing import CodeEditPlanner, CodeVerifier, PatchEngine, PatchKind, PatchOperation
-from resilience import ContinuationManager, FailureClassifier, FallbackSelector
+from resilience import ContinuationManager, FailureClassifier, FallbackSelector, ContinuityShell
 from .router import IntentRouter
 from .tools import ToolRegistry
+from fixnet import FixNet
+from memory_subsystem.curriculum import CurriculumMemory
 
 
 class LuciferRuntime:
@@ -42,6 +48,11 @@ class LuciferRuntime:
         self.tools = ToolRegistry(workspace_root=workspace_root)
         self.planner = PlannerService()
         self.evaluator = EvaluatorService()
+        self.goals = GoalEngine()
+        self.directives = DirectiveLedger(workspace_root)
+        self.shadow = ShadowExecutionService()
+        self.trust = ToolTrustRegistry(workspace_root)
+        self.curriculum = CurriculumMemory(workspace_root)
         self.benchmarks = BenchmarkRunner()
         self.improvement_analyzer = ImprovementAnalyzer()
         self.improvement_planner = ImprovementPlanner()
@@ -56,9 +67,206 @@ class LuciferRuntime:
         self.failure_classifier = FailureClassifier()
         self.fallback_selector = FallbackSelector()
         self.continuations = ContinuationManager()
+        self.continuity = ContinuityShell(workspace_root, runtime_name='arc-lucifer-runtime')
         self.backends = backend_registry or BackendRegistry()
+        self.fixnet = FixNet(str(self.workspace_root))
         if 'llamafile' not in self.backends.names():
             self.backends.register('llamafile', LlamafileBackend(process_manager=LlamafileProcessManager(keep_alive=True)))
+
+
+    def register_directive(
+        self,
+        *,
+        title: str,
+        instruction: str,
+        priority: int = 50,
+        scope: str = 'global',
+        constraints: list[str] | None = None,
+        success_conditions: list[str] | None = None,
+        abort_conditions: list[str] | None = None,
+        persistence_mode: str = 'forever',
+        issuer: str = 'operator',
+        supersedes: str | None = None,
+    ) -> dict:
+        directive = self.directives.register(
+            title=title,
+            instruction=instruction,
+            priority=priority,
+            scope=scope,
+            constraints=constraints,
+            success_conditions=success_conditions,
+            abort_conditions=abort_conditions,
+            persistence_mode=persistence_mode,
+            issuer=issuer,
+            supersedes=supersedes,
+        )
+        payload = {'kind': 'directive_ledger', **directive}
+        self.kernel.record_evaluation('directives', payload)
+        return {'status': 'ok', 'directive': directive, **({'directive_id': directive.get('directive_id'), 'directive_status': directive.get('status')})}
+
+    def complete_directive(self, directive_id: str, *, status: str = 'complete') -> dict:
+        directive = self.directives.complete(directive_id, status=status)
+        if directive is None:
+            return {'status': 'error', 'reason': 'unknown_directive'}
+        payload = {'kind': 'directive_ledger', **directive}
+        self.kernel.record_evaluation('directives', payload)
+        return {'status': 'ok', 'directive': directive, **({'directive_id': directive.get('directive_id'), 'directive_status': directive.get('status')})}
+
+    def directive_stats(self) -> dict:
+        return {'status': 'ok', **self.directives.stats()}
+
+    def boot_continuity(self, *, fallback_available: bool = True, notes: str = '') -> dict:
+        primary_available = 'llamafile' in self.backends.names()
+        receipt = self.continuity.boot(
+            active_directive_count=self.directives.stats().get('active_directive_count', 0),
+            primary_available=primary_available,
+            fallback_available=fallback_available,
+            notes=notes,
+        )
+        payload = {'kind': 'continuity_boot', **receipt}
+        self.kernel.record_evaluation('continuity', payload)
+        return {'status': 'ok', 'boot_receipt': receipt, **({'mode': receipt.get('mode'), 'boot_index': receipt.get('boot_index')})}
+
+    def continuity_heartbeat(self, *, mode: str | None = None, notes: str = '') -> dict:
+        heartbeat = self.continuity.heartbeat(mode=mode, notes=notes)
+        payload = {'kind': 'continuity_heartbeat', **heartbeat}
+        self.kernel.record_evaluation('continuity', payload)
+        return {'status': 'ok', 'heartbeat': heartbeat, **({'mode': heartbeat.get('mode'), 'heartbeat_at': heartbeat.get('heartbeat_at')})}
+
+    def continuity_status(self) -> dict:
+        watchdog = self.continuity.watchdog()
+        return {'status': 'ok', **self.continuity.status(), 'watchdog': watchdog}
+
+    def fixnet_register(
+        self,
+        *,
+        title: str,
+        error_type: str,
+        error_signature: str,
+        solution: str,
+        summary: str = '',
+        keywords: list[str] | None = None,
+        context: dict | None = None,
+        evidence: dict | None = None,
+        linked_event_ids: list[str] | None = None,
+        linked_run_ids: list[str] | None = None,
+        linked_proposal_ids: list[str] | None = None,
+        auto_embed: bool = False,
+        archive_branch_id: str = 'archive_branch_main',
+    ) -> dict:
+        fix, novelty = self.fixnet.register_fix(
+            title=title,
+            error_type=error_type,
+            error_signature=error_signature,
+            solution=solution,
+            summary=summary,
+            keywords=keywords,
+            context=context,
+            evidence=evidence,
+            linked_event_ids=linked_event_ids,
+            linked_run_ids=linked_run_ids,
+            linked_proposal_ids=linked_proposal_ids,
+        )
+        payload = {
+            'kind': 'fixnet_fix',
+            'fix_id': fix['fix_id'],
+            'title': fix.get('title'),
+            'error_type': fix.get('error_type'),
+            'error_signature': fix.get('error_signature'),
+            'summary': fix.get('summary'),
+            'keywords': fix.get('keywords', []),
+            'novelty': novelty,
+        }
+        self.kernel.record_evaluation('fixnet', payload)
+        result = {'status': 'ok', 'fix': fix, 'novelty': novelty}
+        if auto_embed:
+            embedded = self.fixnet.embed(fix['fix_id'], archive_branch_id=archive_branch_id)
+            embed_payload = {
+                'kind': 'fixnet_embedded_archive',
+                'fix_id': fix['fix_id'],
+                'archive_branch_id': archive_branch_id,
+                'archive_pack_id': embedded['archive_ref']['archive_pack_id'],
+                'early_merge_at': embedded['archive_ref']['early_merge_at'],
+                'last_sync_at': embedded['archive_ref']['last_sync_at'],
+                'path': embedded['path'],
+            }
+            self.kernel.record_evaluation('fixnet', embed_payload)
+            self.kernel.record_memory_update('fixnet', embed_payload)
+            result['embedded'] = embedded
+        return result
+
+    def fixnet_embed(self, fix_id: str, *, archive_branch_id: str = 'archive_branch_main') -> dict:
+        embedded = self.fixnet.embed(fix_id, archive_branch_id=archive_branch_id)
+        embed_payload = {
+            'kind': 'fixnet_embedded_archive',
+            'fix_id': fix_id,
+            'archive_branch_id': archive_branch_id,
+            'archive_pack_id': embedded['archive_ref']['archive_pack_id'],
+            'early_merge_at': embedded['archive_ref']['early_merge_at'],
+            'last_sync_at': embedded['archive_ref']['last_sync_at'],
+            'path': embedded['path'],
+        }
+        self.kernel.record_evaluation('fixnet', embed_payload)
+        self.kernel.record_memory_update('fixnet', embed_payload)
+        return {'status': 'ok', **embedded}
+
+    def fixnet_stats(self) -> dict:
+        return {'status': 'ok', **self.fixnet.stats()}
+
+    def fixnet_sync_archive(self, fix_id: str, *, status: str = 'live', retirement_at: str | None = None) -> dict:
+        synced = self.fixnet.sync_archive(fix_id, status=status, retirement_at=retirement_at)
+        payload = {'kind': 'fixnet_embedded_archive', 'fix_id': fix_id, **synced}
+        self.kernel.record_evaluation('fixnet', payload)
+        self.kernel.record_memory_update('fixnet', payload)
+        return {'status': 'ok', **synced}
+
+    def record_tool_outcome(self, tool_name: str, *, succeeded: bool, notes: str = '', evidence: dict | None = None) -> dict:
+        profile = self.trust.record_outcome(tool_name, succeeded=succeeded, notes=notes, evidence=evidence)
+        payload = {'kind': 'tool_trust', **profile}
+        self.kernel.record_evaluation('trust', payload)
+        return {'status': 'ok', **profile}
+
+    def tool_trust_stats(self) -> dict:
+        return {'status': 'ok', **self.trust.stats()}
+
+    def record_curriculum(self, *, theme: str, skill: str | None = None, failure_cluster: str | None = None, outcome: str = 'observed', notes: str = '') -> dict:
+        data = self.curriculum.record(theme=theme, skill=skill, failure_cluster=failure_cluster, outcome=outcome, notes=notes)
+        payload = {
+            'kind': 'curriculum_memory',
+            'theme': theme,
+            'skill': skill,
+            'failure_cluster': failure_cluster,
+            'outcome': outcome,
+            'notes': notes,
+        }
+        self.kernel.record_evaluation('curriculum', payload)
+        return {'status': 'ok', **self.curriculum.stats()}
+
+    def curriculum_stats(self) -> dict:
+        return {'status': 'ok', **self.curriculum.stats()}
+
+    def compile_goal(self, text: str, *, priority: int = 50) -> dict:
+        goal = self.goals.compile_goal(text, priority=priority)
+        payload = {'kind': 'goal_compilation', **goal.to_dict()}
+        self.kernel.record_evaluation('goal-engine', payload)
+        return {'status': 'ok', **goal.to_dict()}
+
+    def shadow_handle(self, text: str, *, predicted_status: str = 'approve', confirm: bool = False) -> dict:
+        predicted = {'status': predicted_status, 'text': text, 'branches': []}
+        actual = self.handle(text, confirm=confirm)
+        comparison = self.shadow.compare(predicted, actual).to_dict()
+        payload = {'kind': 'shadow_execution', 'text': text, 'prediction': predicted, 'actual': actual, 'comparison': comparison}
+        self.kernel.record_evaluation('shadow', payload)
+        self.record_tool_outcome('shadow_execution', succeeded=bool(comparison.get('status_match')), notes='predicted vs actual comparison', evidence={'comparison': comparison})
+        self.record_curriculum(theme='shadow_execution', skill='prediction_alignment', failure_cluster=None if comparison.get('status_match') else 'shadow_mismatch', outcome='success' if comparison.get('status_match') else 'failure')
+        return {'status': 'ok', **payload}
+
+    def review_improvement_run(self, run_id: str) -> dict:
+        review = self.promotion_gate.review_run(self.workspace_root, run_id)
+        payload = {'kind': 'self_improve_promotion_review', **review}
+        self.kernel.record_evaluation('self-improve', payload)
+        return {'status': 'ok' if review.get('approved') else 'error', **review}
+
 
     def configure_llamafile(
         self,
@@ -306,7 +514,7 @@ class LuciferRuntime:
     def run_benchmarks(self) -> dict:
         payload = self.benchmarks.run_smoke_suite(self.workspace_root)
         self.kernel.record_evaluation('self-improve', payload)
-        return {'status': 'ok', **payload}
+        return {'result': 'ok', **payload}
 
 
     def analyze_improvements(self) -> dict:
@@ -505,12 +713,59 @@ class LuciferRuntime:
         result = self.promotion_gate.validate_run(self.workspace_root, run_id, timeout=timeout)
         payload = {'kind': 'self_improve_validation', **result.to_dict()}
         self.kernel.record_evaluation('self-improve', payload)
+
+        # DARPA closure: automatically capture validation failures as FixNet repair knowledge.
+        self.record_tool_outcome('self_improve_validation', succeeded=result.passed, notes=f'validation run {run_id}', evidence={'validation': result.to_dict()})
+        self.record_curriculum(theme='self_improve', skill='validation', failure_cluster=None if result.passed else 'validation_failure', outcome='success' if result.passed else 'failure', notes=run_id)
+        if not result.passed:
+            failing = [c for c in result.command_results if not c.get('passed')]
+            first = failing[0] if failing else {}
+            signature = f"run:{run_id}|cmd:{first.get('command','unknown')}|rc:{first.get('returncode')}"
+            emitted = self.fixnet_register(
+                title='Self-improve validation failure',
+                error_type='self_improve_validation',
+                error_signature=signature,
+                solution='Adjust patch and/or add regression tests until recommended_commands pass.',
+                summary='Auto-emitted from PromotionGate validation failure.',
+                keywords=['fixnet', 'self-improve', 'validation'],
+                context={'run_id': run_id, 'failing_commands': failing},
+                evidence={'validation': result.to_dict()},
+                linked_run_ids=[run_id],
+                auto_embed=True,
+            )
+            if emitted.get('fix'):
+                self.fixnet_sync_archive(emitted['fix']['fix_id'], status='live')
+
         return {'status': 'ok', **result.to_dict()}
 
     def promote_improvement_run(self, run_id: str, *, force: bool = False) -> dict:
-        result = self.promotion_gate.promote_run(self.workspace_root, run_id, force=force)
+        try:
+            result = self.promotion_gate.promote_run(self.workspace_root, run_id, force=force)
+        except Exception as exc:
+            # DARPA closure: promotion failures become repair knowledge too.
+            emitted = self.fixnet_register(
+                title='Self-improve promotion failure',
+                error_type='self_improve_promotion',
+                error_signature=f"run:{run_id}|force:{force}|exc:{type(exc).__name__}",
+                solution='Fix validation failures or adjust evidence bundle before promotion.',
+                summary=str(exc),
+                keywords=['fixnet', 'self-improve', 'promotion'],
+                context={'run_id': run_id, 'force': force},
+                evidence={'exception': repr(exc)},
+                linked_run_ids=[run_id],
+                auto_embed=True,
+            )
+            self.record_tool_outcome('self_improve_promotion', succeeded=False, notes=f'promotion failed for {run_id}', evidence={'exception': repr(exc)})
+            self.record_curriculum(theme='self_improve', skill='promotion', failure_cluster='promotion_failure', outcome='failure', notes=run_id)
+            if emitted.get('fix'):
+                self.fixnet_sync_archive(emitted['fix']['fix_id'], status='live')
+            payload = {'kind': 'self_improve_promotion', 'run_id': run_id, 'forced': force, 'error': str(exc), 'exception': type(exc).__name__}
+            self.kernel.record_evaluation('self-improve', payload)
+            return {'status': 'error', **payload}
         payload = {'kind': 'self_improve_promotion', **result}
         self.kernel.record_evaluation('self-improve', payload)
+        self.record_tool_outcome('self_improve_promotion', succeeded=True, notes=f'promotion succeeded for {run_id}', evidence={'promotion': result})
+        self.record_curriculum(theme='self_improve', skill='promotion', failure_cluster=None, outcome='success', notes=run_id)
         return {'status': 'ok', **result}
 
     def generate_improvement_candidates(
@@ -542,6 +797,20 @@ class LuciferRuntime:
     def score_improvement_candidates(self, run_id: str, *, timeout: int = 120) -> dict:
         payload = self.candidate_cycles.score_candidates(self.workspace_root, run_id, timeout=timeout)
         self.kernel.record_evaluation('self-improve', {'kind': 'self_improve_candidate_scores', **payload})
+        top = payload.get('best_candidate') or {}
+        self.record_curriculum(theme='self_improve', skill='candidate_scoring', failure_cluster=None if top else 'missing_candidate_scores', outcome='success' if top else 'failure', notes=run_id)
+        if top:
+            self.fixnet_register(
+                title='Self-improve candidate scoring',
+                error_type='self_improve_candidates',
+                error_signature=f"run:{run_id}|candidate:{top.get('candidate_id','unknown')}",
+                solution='Prefer the highest-scoring validated candidate or iterate on failing variants.',
+                summary='Auto-emitted from candidate scoring.',
+                keywords=['fixnet','self-improve','candidates'],
+                context={'run_id': run_id, 'best_candidate': top},
+                evidence={'candidate_scores': payload},
+                linked_run_ids=[run_id],
+            )
         return payload
 
 
@@ -582,6 +851,19 @@ class LuciferRuntime:
     def choose_best_improvement_candidate(self, run_id: str) -> dict:
         payload = self.candidate_cycles.choose_best_candidate(self.workspace_root, run_id)
         self.kernel.record_evaluation('self-improve', {'kind': 'self_improve_best_candidate', **payload})
+        if payload.get('candidate_id'):
+            self.record_curriculum(theme='self_improve', skill='candidate_selection', outcome='success', notes=run_id)
+            self.fixnet_register(
+                title='Self-improve best candidate selected',
+                error_type='self_improve_best_candidate',
+                error_signature=f"run:{run_id}|candidate:{payload.get('candidate_id')}",
+                solution='Promote only after review and successful validation.',
+                summary='Auto-emitted from best-candidate selection.',
+                keywords=['fixnet','self-improve','best-candidate'],
+                context={'run_id': run_id, 'candidate': payload},
+                evidence={'best_candidate': payload},
+                linked_run_ids=[run_id],
+            )
         return payload
 
     def execute_best_improvement_candidate(

@@ -83,16 +83,52 @@ class PromotionGate:
             validation_path=str(validation_path.resolve()),
         )
 
-    def promote_run(self, workspace_root: str | Path, run_id: str, *, force: bool = False) -> dict[str, Any]:
+    def review_run(self, workspace_root: str | Path, run_id: str) -> dict[str, Any]:
         run_dir = self._find_run_dir(workspace_root, run_id)
         manifest = self.load_manifest(workspace_root, run_id)
         validation_path = run_dir / 'validation.json'
-        if not force:
-            if not validation_path.exists():
-                raise ValueError('Run must be validated before promotion.')
-            validation = json.loads(validation_path.read_text(encoding='utf-8'))
-            if not validation.get('passed'):
-                raise ValueError('Validation failed; refusing promotion.')
+        if not validation_path.exists():
+            return {
+                'run_id': run_id,
+                'approved': False,
+                'reason': 'missing_validation',
+                'checks': {'validation_exists': False},
+            }
+        validation = json.loads(validation_path.read_text(encoding='utf-8'))
+        command_results = list(validation.get('command_results', []))
+        applied_patches = list(manifest.get('applied_patches', []))
+        all_patch_success = all(p.get('success') for p in applied_patches) if applied_patches else True
+        checks = {
+            'validation_exists': True,
+            'validation_passed': bool(validation.get('passed')),
+            'command_count': len(command_results),
+            'has_evidence_bundle': bool(command_results),
+            'all_patch_success': all_patch_success,
+        }
+        approved = all([
+            checks['validation_exists'],
+            checks['validation_passed'],
+            checks['has_evidence_bundle'],
+            checks['all_patch_success'],
+        ])
+        reason = 'approved' if approved else 'promotion_court_denied'
+        payload = {
+            'run_id': run_id,
+            'approved': approved,
+            'reason': reason,
+            'checks': checks,
+            'command_results': command_results,
+            'applied_patches': applied_patches,
+        }
+        (run_dir / 'promotion_review.json').write_text(json.dumps(payload, indent=2, sort_keys=True), encoding='utf-8')
+        return payload
+
+    def promote_run(self, workspace_root: str | Path, run_id: str, *, force: bool = False) -> dict[str, Any]:
+        run_dir = self._find_run_dir(workspace_root, run_id)
+        manifest = self.load_manifest(workspace_root, run_id)
+        review = self.review_run(workspace_root, run_id)
+        if not force and not review.get('approved'):
+            raise ValueError(f"Promotion review denied: {review.get('reason')}")
         worktree_dir = Path(manifest['worktree_dir'])
         workspace = Path(workspace_root).resolve()
         promoted: list[str] = []
@@ -114,6 +150,7 @@ class PromotionGate:
             'promoted_paths': promoted,
             'forced': force,
             'workspace': str(workspace),
+            'review': review,
         }
         (run_dir / 'promotion.json').write_text(json.dumps(payload, indent=2, sort_keys=True), encoding='utf-8')
         return payload

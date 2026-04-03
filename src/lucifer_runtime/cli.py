@@ -230,6 +230,95 @@ def build_parser() -> argparse.ArgumentParser:
     self_cycle.add_argument('--promote', action='store_true')
     self_cycle.add_argument('--force-promote', action='store_true')
     self_cycle.add_argument('--no-quarantine', action='store_true')
+    self_review = self_sub.add_parser('review-run', help='Review the promotion evidence bundle for a self-improvement run.')
+    self_review.add_argument('run_id')
+
+    fixnet_p = sub.add_parser('fixnet', help='FixNet repair intelligence: storage, consensus, novelty, and embedded archive mirrors.')
+    fixnet_sub = fixnet_p.add_subparsers(dest='fixnet_command', required=True)
+
+    fixnet_register = fixnet_sub.add_parser('register', help='Register a fix with semantic lineage and novelty scoring.')
+    fixnet_register.add_argument('--title', required=True)
+    fixnet_register.add_argument('--error-type', required=True)
+    fixnet_register.add_argument('--error-signature', required=True)
+    fixnet_register.add_argument('--solution', required=True)
+    fixnet_register.add_argument('--summary', default='')
+    fixnet_register.add_argument('--keywords', default='')
+    fixnet_register.add_argument('--context-json', default='{}')
+    fixnet_register.add_argument('--evidence-json', default='{}')
+    fixnet_register.add_argument('--linked-event-id', action='append', default=[])
+    fixnet_register.add_argument('--linked-run-id', action='append', default=[])
+    fixnet_register.add_argument('--linked-proposal-id', action='append', default=[])
+    fixnet_register.add_argument('--auto-embed', action='store_true')
+    fixnet_register.add_argument('--archive-branch-id', default='archive_branch_main')
+
+    fixnet_embed = fixnet_sub.add_parser('embed', help='Embed an existing fix into the archive-visible mirror.')
+    fixnet_embed.add_argument('fix_id')
+    fixnet_embed.add_argument('--archive-branch-id', default='archive_branch_main')
+
+    fixnet_stats = fixnet_sub.add_parser('stats', help='Show FixNet statistics and consensus tier counts.')
+
+    fixnet_sync = fixnet_sub.add_parser('sync-archive', help='Update live-linked embedded archive metadata for an existing fix.')
+    fixnet_sync.add_argument('fix_id')
+    fixnet_sync.add_argument('--status', default='live')
+    fixnet_sync.add_argument('--retirement-at', default=None)
+
+    trust_p = sub.add_parser('trust', help='Record or inspect tool/model trust profiles.')
+    trust_sub = trust_p.add_subparsers(dest='trust_command', required=True)
+    trust_record = trust_sub.add_parser('record', help='Record a tool or subsystem outcome.')
+    trust_record.add_argument('tool_name')
+    trust_record.add_argument('--status', choices=['success', 'failure'], required=True)
+    trust_record.add_argument('--notes', default='')
+    trust_record.add_argument('--evidence-json', default='{}')
+    trust_sub.add_parser('stats', help='Show trust profile statistics.')
+
+    curriculum_p = sub.add_parser('curriculum', help='Record or inspect long-horizon curriculum memory.')
+    curriculum_sub = curriculum_p.add_subparsers(dest='curriculum_command', required=True)
+    curriculum_record = curriculum_sub.add_parser('record', help='Record a curriculum theme, skill, or failure cluster.')
+    curriculum_record.add_argument('--theme', required=True)
+    curriculum_record.add_argument('--skill', default=None)
+    curriculum_record.add_argument('--failure-cluster', default=None)
+    curriculum_record.add_argument('--outcome', default='observed')
+    curriculum_record.add_argument('--notes', default='')
+    curriculum_sub.add_parser('stats', help='Show curriculum memory statistics.')
+
+    directive_p = sub.add_parser('directive', help='Persist long-lived operator directives for the runtime.')
+    directive_sub = directive_p.add_subparsers(dest='directive_command', required=True)
+    directive_add = directive_sub.add_parser('add', help='Add an active directive to the directive ledger.')
+    directive_add.add_argument('--title', required=True)
+    directive_add.add_argument('--instruction', required=True)
+    directive_add.add_argument('--priority', type=int, default=50)
+    directive_add.add_argument('--scope', default='global')
+    directive_add.add_argument('--constraints', default='')
+    directive_add.add_argument('--success-conditions', default='')
+    directive_add.add_argument('--abort-conditions', default='')
+    directive_add.add_argument('--persistence-mode', default='forever')
+    directive_add.add_argument('--issuer', default='operator')
+    directive_add.add_argument('--supersedes', default=None)
+    directive_complete = directive_sub.add_parser('complete', help='Mark a directive complete or superseded.')
+    directive_complete.add_argument('directive_id')
+    directive_complete.add_argument('--status', default='complete')
+    directive_sub.add_parser('stats', help='Show directive ledger status.')
+
+    continuity_p = sub.add_parser('continuity', help='Boot, heartbeat, and inspect runtime continuity state.')
+    continuity_sub = continuity_p.add_subparsers(dest='continuity_command', required=True)
+    continuity_boot = continuity_sub.add_parser('boot', help='Record a continuity boot receipt and choose primary/fallback mode.')
+    continuity_boot.add_argument('--fallback-available', action='store_true')
+    continuity_boot.add_argument('--notes', default='')
+    continuity_heartbeat = continuity_sub.add_parser('heartbeat', help='Update continuity heartbeat state.')
+    continuity_heartbeat.add_argument('--mode', default=None)
+    continuity_heartbeat.add_argument('--notes', default='')
+    continuity_sub.add_parser('status', help='Show continuity identity, boot receipts, and watchdog health.')
+
+
+    goal_p = sub.add_parser('goal', help='Compile operator intent into a structured goal contract.')
+    goal_p.add_argument('text')
+    goal_p.add_argument('--priority', type=int, default=50)
+
+    shadow_p = sub.add_parser('shadow', help='Run a shadow predicted-vs-actual comparison for a command.')
+    shadow_p.add_argument('text')
+    shadow_p.add_argument('--predicted-status', default='approve')
+    shadow_p.add_argument('--confirm', action='store_true')
+
 
     memory_p = sub.add_parser('memory', help='Manage live, warm, and archived memory tiers.')
     memory_sub = memory_p.add_subparsers(dest='memory_command', required=True)
@@ -682,6 +771,16 @@ def main(argv: list[str] | None = None) -> int:
                     'code plan <path> <instruction> [--symbol name]',
                     'code replace-range <path> <start_line> <end_line> <replacement_text>',
                     'code replace-symbol <path> <symbol_name> <replacement_text>',
+                    'fixnet sync-archive <fix_id> [--status live]',
+                    'trust record <tool_name> --status success|failure',
+                    'trust stats',
+                    'curriculum record --theme name [--skill skill]',
+                    'curriculum stats',
+                    'directive add --title title --instruction text [--priority 90]',
+                    'directive stats',
+                    'continuity boot [--fallback-available]',
+                    'continuity heartbeat [--mode fallback]',
+                    'continuity status',
                 ],
             })
         if args.command == 'code':
@@ -695,8 +794,75 @@ def main(argv: list[str] | None = None) -> int:
                 return _print_json(runtime.code_replace_range(args.path, args.start_line, args.end_line, args.replacement_text, confirm=args.confirm, expected_hash=args.expected_hash, reason=args.reason))
             if args.code_command == 'replace-symbol':
                 return _print_json(runtime.code_replace_symbol(args.path, args.symbol_name, args.replacement_text, confirm=args.confirm, expected_hash=args.expected_hash, reason=args.reason))
+        if args.command == 'directive':
+            if args.directive_command == 'add':
+                return _print_json(runtime.register_directive(
+                    title=args.title,
+                    instruction=args.instruction,
+                    priority=args.priority,
+                    scope=args.scope,
+                    constraints=[k.strip() for k in args.constraints.split(',') if k.strip()],
+                    success_conditions=[k.strip() for k in args.success_conditions.split(',') if k.strip()],
+                    abort_conditions=[k.strip() for k in args.abort_conditions.split(',') if k.strip()],
+                    persistence_mode=args.persistence_mode,
+                    issuer=args.issuer,
+                    supersedes=args.supersedes,
+                ))
+            if args.directive_command == 'complete':
+                return _print_json(runtime.complete_directive(args.directive_id, status=args.status))
+            if args.directive_command == 'stats':
+                return _print_json(runtime.directive_stats())
+            return _print_json({'status': 'error', 'reason': f'unknown directive command: {args.directive_command}'})
+        if args.command == 'continuity':
+            if args.continuity_command == 'boot':
+                return _print_json(runtime.boot_continuity(fallback_available=args.fallback_available, notes=args.notes))
+            if args.continuity_command == 'heartbeat':
+                return _print_json(runtime.continuity_heartbeat(mode=args.mode, notes=args.notes))
+            if args.continuity_command == 'status':
+                return _print_json(runtime.continuity_status())
+            return _print_json({'status': 'error', 'reason': f'unknown continuity command: {args.continuity_command}'})
+        if args.command == 'goal':
+            return _print_json(runtime.compile_goal(args.text, priority=args.priority))
+        if args.command == 'shadow':
+            return _print_json(runtime.shadow_handle(args.text, predicted_status=args.predicted_status, confirm=args.confirm))
         if args.command == 'memory':
             return _memory_command(runtime, args)
+        if args.command == 'fixnet':
+            if args.fixnet_command == 'register':
+                return _print_json(runtime.fixnet_register(
+                    title=args.title,
+                    error_type=args.error_type,
+                    error_signature=args.error_signature,
+                    solution=args.solution,
+                    summary=args.summary,
+                    keywords=[k.strip() for k in args.keywords.split(',') if k.strip()],
+                    context=json.loads(args.context_json),
+                    evidence=json.loads(args.evidence_json),
+                    linked_event_ids=args.linked_event_id,
+                    linked_run_ids=args.linked_run_id,
+                    linked_proposal_ids=args.linked_proposal_id,
+                    auto_embed=args.auto_embed,
+                    archive_branch_id=args.archive_branch_id,
+                ))
+            if args.fixnet_command == 'embed':
+                return _print_json(runtime.fixnet_embed(args.fix_id, archive_branch_id=args.archive_branch_id))
+            if args.fixnet_command == 'stats':
+                return _print_json(runtime.fixnet_stats())
+            if args.fixnet_command == 'sync-archive':
+                return _print_json(runtime.fixnet_sync_archive(args.fix_id, status=args.status, retirement_at=args.retirement_at))
+            return _print_json({'status': 'error', 'reason': f'unknown fixnet command: {args.fixnet_command}'})
+        if args.command == 'trust':
+            if args.trust_command == 'record':
+                return _print_json(runtime.record_tool_outcome(args.tool_name, succeeded=args.status == 'success', notes=args.notes, evidence=json.loads(args.evidence_json)))
+            if args.trust_command == 'stats':
+                return _print_json(runtime.tool_trust_stats())
+            return _print_json({'status': 'error', 'reason': f'unknown trust command: {args.trust_command}'})
+        if args.command == 'curriculum':
+            if args.curriculum_command == 'record':
+                return _print_json(runtime.record_curriculum(theme=args.theme, skill=args.skill, failure_cluster=args.failure_cluster, outcome=args.outcome, notes=args.notes))
+            if args.curriculum_command == 'stats':
+                return _print_json(runtime.curriculum_stats())
+            return _print_json({'status': 'error', 'reason': f'unknown curriculum command: {args.curriculum_command}'})
         if args.command == 'failures':
             state = runtime.kernel.state()
             return _print_json({'status': 'ok', 'failures': state.fallback_events, 'count': len(state.fallback_events)})
