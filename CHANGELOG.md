@@ -1,3 +1,11 @@
+## v2.10.5
+
+- clarified the public direction around optional perception, multimodal, and robotics adapters
+- added `perception_adapters/` contracts so embodiment layers can be attached without becoming hard runtime requirements
+- expanded packaging extras for optional vision/audio/robotics experimentation while keeping the base install dependency-light
+- updated README and architecture docs to present the repo honestly as an autonomy foundation rather than a finished living machine
+- added docs for vision runtime flow, optional adapter doctrine, and public direction goals
+
 ## v2.10.4
 
 - cleaned release artifacts from the tracked tree and added a root `.gitignore` for caches, local state, and generated outputs

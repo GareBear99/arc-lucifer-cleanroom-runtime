@@ -13,6 +13,7 @@ The system is designed to keep a long-lived local operator shell coherent across
 - `cognition_services/` — goals, planning, evaluation, directives, trust, world-model oriented helpers
 - `model_services/` — local model configuration, profiles, interfaces, and managed execution paths
 - `memory_subsystem/` — hot/warm/archive tiers, mirroring, ranking, retrieval, retirement behavior
+- `perception_adapters/` — optional vision, audio, simulator, and robotics adapter contracts that keep the core runtime dependency-light
 - `self_improve/` — scaffolded runs, candidate generation, scoring, execution, promotion, adversarial testing
 - `code_editing/` — exact range and symbol-grounded code manipulation flows
 - `fixnet/` — repair lineage, novelty filtering, semantic fix objects, archive mirrors
@@ -47,4 +48,4 @@ Directive input
 
 ## Current boundary
 
-The repository is a strong technical foundation. Real-world production maturity still depends on external soak testing, hardware validation, installer packaging, and chosen model benchmarking.
+The repository is a strong technical foundation. Perception and robotics are now framed as optional capability layers rather than mandatory assumptions. Real-world production maturity still depends on external soak testing, hardware validation, adapter implementations, installer packaging, and chosen model benchmarking.

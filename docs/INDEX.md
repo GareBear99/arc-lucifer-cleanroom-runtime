@@ -8,6 +8,7 @@ This folder is the long-form technical walkthrough for ARC Lucifer Cleanroom Run
 - `REPO_SEO.md` — public GitHub naming, description, topics, and release positioning
 
 ## Runtime, cognition, and model flow
+- `vision_runtime_optional_adapters.md` — optional perception/robotics architecture and structured world-state flow
 - `llamafile_flow.md` — local-model execution path and managed llamafile flow
 - `token_counting.md` — token accounting notes
 - `v2_9_model_profiles_and_training.md` — model profile registry and future training/export hooks
@@ -39,10 +40,11 @@ This folder is the long-form technical walkthrough for ARC Lucifer Cleanroom Run
 
 ### For first-time GitHub visitors
 1. `architecture.md`
-2. `doctrine.md`
-3. `llamafile_flow.md`
-4. `memory_retention.md`
-5. `v2_3_autonomous_patch_cycle.md`
+2. `vision_runtime_optional_adapters.md`
+3. `doctrine.md`
+4. `llamafile_flow.md`
+5. `memory_retention.md`
+6. `v2_3_autonomous_patch_cycle.md`
 
 ### For memory/archive design
 1. `memory_retention.md`
