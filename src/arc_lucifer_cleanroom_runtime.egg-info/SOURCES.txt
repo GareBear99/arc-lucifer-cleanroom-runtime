@@ -13,6 +13,7 @@ docs/llamafile_flow.md
 docs/memory_retention.md
 docs/migration_plan.md
 docs/proto_agi_integration.md
+docs/public_direction.md
 docs/source_comparison.md
 docs/token_counting.md
 docs/v0_4_upgrade_notes.md
@@ -43,6 +44,7 @@ docs/v2_6_candidate_cycles.md
 docs/v2_7_adversarial_cycles.md
 docs/v2_9_1_fixnet_archive_embedding.md
 docs/v2_9_model_profiles_and_training.md
+docs/vision_runtime_optional_adapters.md
 src/arc_kernel/__init__.py
 src/arc_kernel/branching.py
 src/arc_kernel/budgets.py
@@ -101,6 +103,9 @@ src/model_services/llamafile_backend.py
 src/model_services/llamafile_process.py
 src/model_services/local_stub.py
 src/model_services/profiles.py
+src/perception_adapters/__init__.py
+src/perception_adapters/interfaces.py
+src/perception_adapters/registry.py
 src/resilience/__init__.py
 src/resilience/continuation_manager.py
 src/resilience/continuity_shell.py
@@ -139,6 +144,7 @@ tests/test_memory_retention.py
 tests/test_memory_search_and_planning.py
 tests/test_model_profiles_and_training.py
 tests/test_monitor_and_self_improve.py
+tests/test_optional_adapters.py
 tests/test_pending_and_rollback.py
 tests/test_persistence_and_trace.py
 tests/test_persistent_loop.py

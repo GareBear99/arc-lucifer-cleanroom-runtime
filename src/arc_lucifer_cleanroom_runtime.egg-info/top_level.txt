@@ -6,6 +6,7 @@ fixnet
 lucifer_runtime
 memory_subsystem
 model_services
+perception_adapters
 resilience
 self_improve
 verifier
