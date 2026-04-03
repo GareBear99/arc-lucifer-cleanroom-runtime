@@ -1,6 +1,12 @@
 
 # Changelog
 
+## v2.9.1
+- Refreshed README for the chosen public repo identity and clearer runtime positioning.
+- Added GitHub scaffolding: issue templates, PR template, release template, CI workflow, and release validation workflow.
+- Added repo metadata docs, architecture overview, social preview asset, and packaging hygiene files.
+
+
 ## v2.9.0
 - Added open-ended model profile registry for GGUF/local/external backends.
 - Added training corpus export commands for supervised and preference JSONL.
