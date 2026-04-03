@@ -4,12 +4,24 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "arc-lucifer-cleanroom-runtime"
-version = "2.10.3"
+version = "2.10.4"
 description = "Deterministic local-first AI operator runtime with receipts, replay, rollback, ranked memory, and DARPA-grade repair intelligence (FixNet)."
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{name = "Gary Doman"}]
+license = "MIT"
 dependencies = []
+keywords = ["ai-runtime", "local-ai", "agent-runtime", "llamafile", "gguf", "deterministic-systems", "self-improvement", "persistent-memory", "rollback", "replay", "cli", "clean-room"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Operating System :: OS Independent",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 
 [project.scripts]
 lucifer = "lucifer_runtime.cli:main"
@@ -29,3 +41,8 @@ dev = [
 [tool.pytest.ini_options]
 addopts = "-q"
 testpaths = ["tests"]
+
+[project.urls]
+Homepage = "https://github.com/GareBear99/arc-lucifer-cleanroom-runtime"
+Documentation = "https://github.com/GareBear99/arc-lucifer-cleanroom-runtime/tree/main/docs"
+Issues = "https://github.com/GareBear99/arc-lucifer-cleanroom-runtime/issues"

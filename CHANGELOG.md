@@ -1,3 +1,11 @@
+## v2.10.4
+
+- cleaned release artifacts from the tracked tree and added a root `.gitignore` for caches, local state, and generated outputs
+- restored a real GitHub Actions CI workflow covering Python 3.11, 3.12, and 3.13
+- added a `Makefile` for install/test/smoke/release-check/clean flows
+- made bootstrap and release-check scripts more portable by defaulting to `python3` and invoking smoke through `bash`
+- corrected README quick-start and repo-structure docs so they match the actual package layout
+
 ## v2.10.3
 
 - Added first-class directive ledger with persisted operator directives, priorities, supersession, and completion state.

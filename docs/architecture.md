@@ -1,18 +1,39 @@
 # ARC Lucifer Cleanroom Runtime Architecture
 
-ARC Lucifer Cleanroom Runtime is organized as a deterministic operator runtime with separated responsibilities.
+ARC Lucifer Cleanroom Runtime is organized as a deterministic operator runtime with separated responsibilities and a strong bias toward continuity, auditability, and bounded autonomy.
+
+## System goal
+
+The system is designed to keep a long-lived local operator shell coherent across runs. It does that by separating directive handling, runtime state, planning, execution, verification, memory retention, and repair lineage instead of collapsing everything into one opaque model session.
 
 ## Major subsystems
 
 - `arc_kernel/` — event authority, receipts, policy recording, replay, rollback, branching, persistence
 - `lucifer_runtime/` — CLI surface, routing, command handling, operator-facing execution layer
-- `cognition_services/` — goals, planning, evaluation, world-model oriented helpers
-- `model_services/` — local model configuration and managed execution paths
-- `memory_subsystem/` — hot/warm/archive tiers, mirroring, ranking, retrieval
+- `cognition_services/` — goals, planning, evaluation, directives, trust, world-model oriented helpers
+- `model_services/` — local model configuration, profiles, interfaces, and managed execution paths
+- `memory_subsystem/` — hot/warm/archive tiers, mirroring, ranking, retrieval, retirement behavior
 - `self_improve/` — scaffolded runs, candidate generation, scoring, execution, promotion, adversarial testing
 - `code_editing/` — exact range and symbol-grounded code manipulation flows
-- `resilience/` — degraded modes, fallbacks, tracked failures, operational hardening
+- `fixnet/` — repair lineage, novelty filtering, semantic fix objects, archive mirrors
+- `resilience/` — degraded modes, fallbacks, continuation, retry budgets, operational hardening
 - `verifier/` — validation surfaces and safe promotion checks
+- `dashboards/` — monitoring and trace inspection helpers
+
+## Control flow
+
+```text
+Directive input
+  -> continuity / runtime boot
+  -> state + world-model load
+  -> goal compile / planning
+  -> action routing
+  -> receipt / result capture
+  -> verification / evaluation / shadow compare
+  -> trust + curriculum + FixNet update
+  -> memory/archive update
+  -> continuity save
+```
 
 ## Design priorities
 
@@ -22,6 +43,7 @@ ARC Lucifer Cleanroom Runtime is organized as a deterministic operator runtime w
 4. Memory that remains readable and rankable
 5. Bounded self-improvement instead of unconstrained mutation
 6. Open-ended backend integration without giving up runtime authority
+7. Fallback-aware operation rather than brittle single-path execution
 
 ## Current boundary
 
