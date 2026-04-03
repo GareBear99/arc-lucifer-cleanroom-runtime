@@ -1,14 +1,22 @@
-# ARC Lucifer Cleanroom Runtime
+# 📜 ARC Lucifer Cleanroom Runtime
 
-A clean-room, local-first operator runtime that combines:
-- **ARC Kernel** for event authority, policy, receipts, replay, rollback, branching, and persistent state
-- **Lucifer Runtime** for terminal routing, command handling, tool execution, and resilience/fallbacks
-- **Cognition Services** for goals, world-model views, planning, evaluation, and persistent loop behavior
-- **Managed local-model execution** through llamafile
-- **Memory tiers** with mirror-then-retire archival and ranked retrieval
-- **Self-improvement runs** with sandboxed candidate generation, scoring, validation, promotion, and adversarial testing
+Deterministic, local-first AI operator runtime with receipts, replay, rollback, ranked memory, managed local-model execution, and sandboxed self-improvement.
 
-## Current package state (v2.8.0)
+## Why this repo exists
+
+ARC Lucifer Cleanroom Runtime is a clean-room runtime foundation for building persistent local AI operators that can:
+- execute deterministic operator flows
+- record receipts and policy decisions
+- support replay, rollback, and validation
+- maintain ranked hot/warm/archive memory
+- run bounded self-improvement cycles inside a sandbox
+- stay open-ended for future GGUF, llamafile, or other backend integrations
+
+This repository is designed as a **production-ready technical foundation**, not a claim of solved AGI.
+
+## Current package state
+
+**Version:** `v2.9.1`
 
 This build includes:
 - persistent shared SQLite-backed kernel state
@@ -20,25 +28,31 @@ This build includes:
 - self-improvement analysis, planning, scaffolding, candidate generation, scoring, best-candidate execution, promotion, and adversarial fault injection
 - operator commands for monitor, info, doctor, export/import, backup, compact, and failures
 - bootstrap, smoke-test, and release-check scripts
+- open-ended model profile registration and training data export hooks
 
 ## Production posture
 
 This repo is production-ready as a **technical operator/runtime foundation**.
-It is not claiming solved AGI. What remains outside repo-only completion is real hardware/model soak testing, GGUF quality comparisons, installer packaging, and long-duration burn-in.
+
+It is **not** yet claiming the following are complete:
+- real hardware soak validation on your exact GGUF + llamafile setup
+- benchmark-backed model quality comparison pack
+- signed desktop installer packaging
+- unconstrained model-authored patching beyond deterministic candidate machinery
 
 ## Quick start
 
 ```bash
-/usr/local/bin/python3.13 -m venv .venv
+python -m venv .venv
 source .venv/bin/activate
 python -m pip install -U pip
-python -m pip install -e .
+python -m pip install -e .[dev]
 pytest -q
 ./scripts/smoke.sh
 PYTHONPATH=src python -m lucifer_runtime.cli commands
 ```
 
-## Common commands
+## Core commands
 
 ```bash
 PYTHONPATH=src python -m lucifer_runtime.cli commands
@@ -66,7 +80,7 @@ PYTHONPATH=src python -m lucifer_runtime.cli self-improve inject-fault <run_id> 
 PYTHONPATH=src python -m lucifer_runtime.cli self-improve adversarial-cycle <run_id> --kind force_validation_failure --path src/file.py --replacement "..."
 ```
 
-## Code-operator commands
+## Code operator commands
 
 ```bash
 PYTHONPATH=src python -m lucifer_runtime.cli code index <path>
@@ -85,7 +99,7 @@ Memory supports:
 - final front-memory retirement at the normal archive date
 - ranked retrieval using readable memory headers: title, summary, keywords, category, importance, and status
 
-## Repo structure
+## Repository structure
 
 ```text
 src/arc_kernel/
@@ -102,18 +116,25 @@ scripts/
 examples/
 tests/
 docs/
+.github/
+assets/
 ```
 
-## Release hygiene
+## Release and validation
 
 ```bash
 ./scripts/smoke.sh
 ./scripts/release_check.sh
 ```
 
-## Documentation
+## Documentation index
 
-See:
+Start here:
+- [`docs/INDEX.md`](docs/INDEX.md)
+- [`docs/architecture.md`](docs/architecture.md)
+- [`docs/REPO_SEO.md`](docs/REPO_SEO.md)
+
+Technical references:
 - `docs/llamafile_flow.md`
 - `docs/token_counting.md`
 - `docs/memory_retention.md`
@@ -121,13 +142,9 @@ See:
 - `docs/v2_4_memory_mirror_and_stack.md`
 - `docs/v2_6_candidate_cycles.md`
 - `docs/v2_7_adversarial_cycles.md`
-
+- `docs/v2_9_model_profiles_and_training.md`
 
 ## Open-ended model profiles and training export
-
-This runtime now supports open-ended model profiles so you can keep using the
-current local llamafile path while preparing your own future GGUF-oriented model
-work.
 
 Examples:
 
@@ -137,3 +154,19 @@ PYTHONPATH=src python -m lucifer_runtime.cli model profiles
 PYTHONPATH=src python -m lucifer_runtime.cli train export-supervised --output training_corpus.jsonl
 PYTHONPATH=src python -m lucifer_runtime.cli train export-preferences --output preference_pairs.jsonl
 ```
+
+## GitHub release checklist
+
+Before publishing a release:
+- run `pytest -q`
+- run `./scripts/smoke.sh`
+- run `./scripts/release_check.sh`
+- update `CHANGELOG.md`
+- tag the release with the matching version
+- use the release template in `.github/release_template.md`
+
+## License and contribution
+
+- See [`LICENSE.md`](LICENSE.md)
+- See [`CONTRIBUTING.md`](CONTRIBUTING.md)
+- See [`SECURITY.md`](SECURITY.md)
