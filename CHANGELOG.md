@@ -73,3 +73,62 @@
 
 ## v2.0.0
 - Added self-improvement planning and scaffolded run worktrees
+
+## v2.11.0 — Full-Spectrum Perception Adapters
+
+### New: `perception_adapters/adapters/` — six concrete PerceptionAdapter implementations
+
+- **`FFmpegVideoAdapter`** (`[vision]`) — FFmpeg-backed video stream ingestion with
+  OpenCV motion detection, scene-change detection, and luminance tracking.
+- **`WhisperSpeechAdapter`** (`[audio]`) — speech-to-text via openai-whisper or
+  faster-whisper with dual-backend support, segment timestamps, language detection,
+  and built-in vocal distress / command keyword alerting.
+- **`AudioEventAdapter`** (`[audio]`) — non-speech environmental sound classification
+  via spectral heuristics (always available with librosa) or ONNX inference
+  (YAMNet/PANNs). Covers machinery, alarms, impacts, animal sounds, silence.
+- **`OCRAdapter`** (`[vision]`) — text extraction from visual frames via EasyOCR
+  (primary) or pytesseract (fallback), with alert-pattern scanning for ERROR /
+  WARNING / CRITICAL / TRACEBACK / IP address keywords.
+- **`DesktopCaptureAdapter`** (`[vision]`) — cross-platform screen capture via mss,
+  with luminance tracking, pixel-change detection, and activity-region fingerprinting.
+- **`DepthSensorAdapter`** (`[robotics]`) — spatial awareness from Intel RealSense,
+  Azure Kinect, simulation arrays, or raw bytes. Near/mid/far zone occupancy and
+  obstacle proximity alerting.
+
+### New: `perception_adapters/fusion.py` — `PerceptionFusionEngine`
+
+Multi-adapter ObservationBatch fusion with temporal smoothing, confidence gating,
+alert deduplication, and `FusedWorldUpdate.to_world_facts()` for direct WorldModel
+injection.
+
+### New: `perception_adapters/perception_loop.py` — `PerceptionLoop`
+
+Threaded sense-integrate-act loop. Polls adapters at their configured Hz,
+fuses outputs, writes to WorldModel under `perception_*` keys, emits kernel
+evaluation events for full audit/replay, and fires synchronous alert callbacks
+for interrupt-grade response. Adapter crash isolation: one failing sensor cannot
+kill the loop.
+
+### Updated: `pyproject.toml`
+
+- `[audio]` extras now include `openai-whisper`, `ffmpeg-python`, `librosa`, `soundfile`
+- `[vision]` extras now include `ffmpeg-python`, `mss`, `easyocr`
+- `[robotics]` extras include `numpy` (pyrealsense2 noted as manual install)
+- New `[audio-fast]` extra for `faster-whisper` users
+- `[full]` updated to cover complete perception stack
+
+### Updated: `perception_adapters/__init__.py`
+
+Exports `PerceptionFusionEngine`, `FusedWorldUpdate`, `PerceptionLoop`, `AdapterSchedule`.
+
+### New: `examples/run_perception_loop.py`
+
+Full end-to-end AGI loop example demonstrating all six adapters wired into
+LuciferRuntime, WorldModel, PersistentLoop, and GoalEngine. Includes synthetic
+packet injection for no-hardware testing.
+
+### New: `docs/perception_adapters_implementation.md`
+
+DARPA-grade implementation doctrine: adapter inventory, data flow diagram,
+temporal smoothing rationale, alert escalation contract, Hz recommendations,
+dependency isolation guarantees, and wiring cookbook.
