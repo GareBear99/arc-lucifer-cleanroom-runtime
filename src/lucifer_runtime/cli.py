@@ -25,6 +25,11 @@ from .cli_handlers import (
 )
 from .runtime import LuciferRuntime
 from .cli_parser import build_parser
+from robotics_bridge import RoboticsGateway
+from robotics_mapping import MappingGateway
+from spatial_truth import SpatialTruthEngine
+from geo_overlay import GeoOverlayGateway
+from bluetooth_bridge import BluetoothGateway
 
 
 def _run_prompt(runtime: LuciferRuntime, args) -> int:
@@ -88,6 +93,11 @@ COMMAND_LIST = [
     'curriculum record|stats',
     'directive add|complete|stats',
     'continuity boot|heartbeat|status',
+    'robot describe|state-template|safety-check|perform',
+    'mapping describe|state-template|coverage|ingest-update|plan-route',
+    'spatial describe|state-template|ingest-observation|ingest-bt-signal|upsert-anchor|summarize',
+    'bt describe|device-template|trusted-list|register-device|inspect-device|signal-summary|signal-observation|policy-check|perform',
+    'geo describe|anchor-template|register-anchor|nearest-anchor|tile-summary',
 ]
 
 
@@ -150,6 +160,9 @@ def _handle_ops_command(runtime, args) -> int | None:
         return _print_json(runtime.run_benchmarks())
     if args.command == 'memory':
         return _memory_command(runtime, args)
+    robotics = _handle_robotics_stack_command(args)
+    if robotics is not None:
+        return robotics
     return None
 
 
@@ -219,6 +232,80 @@ def _handle_fixnet_command(runtime, args) -> int:
     if args.fixnet_command == 'sync-archive':
         return _print_json(runtime.fixnet_sync_archive(args.fix_id, status=args.status, retirement_at=args.retirement_at))
     return _print_json({'status': 'error', 'reason': f'unknown fixnet command: {args.fixnet_command}'})
+
+
+
+def _handle_robotics_stack_command(args) -> int | None:
+    if args.command == 'robot':
+        gateway = RoboticsGateway()
+        if args.robot_command == 'describe':
+            return _print_json(gateway.describe())
+        if args.robot_command == 'state-template':
+            return _print_json(gateway.state_template())
+        if args.robot_command == 'safety-check':
+            return _print_json(gateway.safety_check(json.loads(args.state_json), action=args.action, subsystem=args.subsystem, params=json.loads(args.params_json)))
+        if args.robot_command == 'perform':
+            return _print_json(gateway.perform(json.loads(args.state_json), action=args.action, subsystem=args.subsystem, params=json.loads(args.params_json)))
+    if args.command == 'mapping':
+        gateway = MappingGateway()
+        if args.mapping_command == 'describe':
+            return _print_json(gateway.describe())
+        if args.mapping_command == 'state-template':
+            return _print_json(gateway.state_template())
+        if args.mapping_command == 'coverage':
+            return _print_json(gateway.coverage(json.loads(args.state_json)))
+        if args.mapping_command == 'ingest-update':
+            robot_position = json.loads(args.robot_position_json) if args.robot_position_json else None
+            return _print_json(gateway.ingest_update(json.loads(args.state_json), json.loads(args.updates_json), robot_position=robot_position))
+        if args.mapping_command == 'plan-route':
+            return _print_json(gateway.plan_route(json.loads(args.state_json), json.loads(args.goal_json)))
+    if args.command == 'spatial':
+        engine = SpatialTruthEngine()
+        if args.spatial_command == 'describe':
+            return _print_json(engine.describe())
+        if args.spatial_command == 'state-template':
+            return _print_json(engine.state_template())
+        if args.spatial_command == 'ingest-observation':
+            return _print_json(engine.ingest_observation(json.loads(args.state_json), json.loads(args.observation_json)))
+        if args.spatial_command == 'ingest-bt-signal':
+            return _print_json(engine.ingest_bluetooth_signal(json.loads(args.state_json), json.loads(args.signal_json)))
+        if args.spatial_command == 'upsert-anchor':
+            return _print_json(engine.upsert_anchor(json.loads(args.state_json), json.loads(args.anchor_json)))
+        if args.spatial_command == 'summarize':
+            return _print_json(engine.summarize(json.loads(args.state_json)))
+    if args.command == 'bt':
+        gateway = BluetoothGateway()
+        if args.bt_command == 'describe':
+            return _print_json(gateway.describe())
+        if args.bt_command == 'device-template':
+            return _print_json(gateway.device_template())
+        if args.bt_command == 'trusted-list':
+            return _print_json(gateway.trusted_list(json.loads(args.devices_json)))
+        if args.bt_command == 'register-device':
+            return _print_json(gateway.register_device(json.loads(args.devices_json), json.loads(args.device_json)))
+        if args.bt_command == 'inspect-device':
+            return _print_json(gateway.inspect_device(json.loads(args.devices_json), args.device_id))
+        if args.bt_command == 'signal-summary':
+            return _print_json(gateway.signal_summary(json.loads(args.devices_json)))
+        if args.bt_command == 'signal-observation':
+            return _print_json(gateway.signal_observation(json.loads(args.devices_json), args.device_id))
+        if args.bt_command == 'policy-check':
+            return _print_json(gateway.policy_check(json.loads(args.devices_json), action=args.action, device_id=args.device_id, profile=args.profile, params=json.loads(args.params_json), operator_approved=args.operator_approved))
+        if args.bt_command == 'perform':
+            return _print_json(gateway.perform(json.loads(args.devices_json), action=args.action, device_id=args.device_id, profile=args.profile, params=json.loads(args.params_json), operator_approved=args.operator_approved))
+    if args.command == 'geo':
+        gateway = GeoOverlayGateway()
+        if args.geo_command == 'describe':
+            return _print_json(gateway.describe())
+        if args.geo_command == 'anchor-template':
+            return _print_json(gateway.anchor_template())
+        if args.geo_command == 'register-anchor':
+            return _print_json(gateway.register_anchor(json.loads(args.anchors_json), json.loads(args.anchor_json)))
+        if args.geo_command == 'nearest-anchor':
+            return _print_json(gateway.nearest_anchor(json.loads(args.anchors_json), args.lat, args.lon))
+        if args.geo_command == 'tile-summary':
+            return _print_json(gateway.tile_summary(json.loads(args.anchors_json), zoom=args.zoom))
+    return None
 
 
 def _handle_meta_command(runtime, args) -> int:
