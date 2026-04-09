@@ -26,7 +26,7 @@ It is aimed at people searching for:
 
 - [What this repository is](#what-this-repository-is)
 - [Why it exists](#why-it-exists)
-- [Current package state](#current-package-state-v2106)
+- [Current package state](#current-package-state-v2111)
 - [Direction goals](#direction-goals)
 - [What makes it different](#what-makes-it-different)
 - [Architecture walkthrough](#architecture-walkthrough)
@@ -68,7 +68,7 @@ This project is aimed at a different center of gravity:
 
 The runtime identity comes from directives, doctrine, runtime state, memory lineage, repair lineage, and the attached cognition/model layer. That means continuity does not disappear when one model run ends.
 
-## Current package state (v2.10.6)
+## Current package state (v2.11.2)
 
 This repository currently includes:
 - persistent shared SQLite-backed kernel state

@@ -1,3 +1,12 @@
+## v2.11.2
+
+- added a production hardening pass for release discipline and repository hygiene
+- fixed public version drift across `pyproject.toml`, `README.md`, and generated package metadata
+- replaced shell-based candidate validation with argv-based subprocess execution via deterministic command normalization
+- added a version audit script and wired it into the release check flow
+- added missing repo hygiene files (`.gitignore` and GitHub Actions CI workflow) so the public tree matches the stated release posture
+- preserved optional perception and robotics adapter direction while tightening trust and maintainability
+
 ## v2.10.5
 
 - clarified the public direction around optional perception, multimodal, and robotics adapters
@@ -74,7 +83,7 @@
 ## v2.0.0
 - Added self-improvement planning and scaffolded run worktrees
 
-## v2.11.0 — Full-Spectrum Perception Adapters
+## v2.11.2 — Full-Spectrum Perception Adapters
 
 ### New: `perception_adapters/adapters/` — six concrete PerceptionAdapter implementations
 
