@@ -8,11 +8,12 @@ system can then choose the best-scoring candidate and execute it in the primary 
 """
 
 import json
+import shlex
 import shutil
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Sequence
 from uuid import uuid4
 
 from code_editing import PatchEngine, PatchKind, PatchOperation
@@ -40,6 +41,24 @@ class CandidateSpec:
             'expected_hash': self.expected_hash,
             'rationale': self.rationale,
         }
+
+
+def _normalize_validation_command(command: str | Sequence[str]) -> list[str]:
+    """Return an argv-style command for subprocess execution without invoking a shell.
+
+    Candidate manifests may store commands as either shell-like strings or explicit argv
+    sequences. Strings are parsed with ``shlex.split`` so validation stays deterministic
+    without opening a shell injection surface.
+    """
+    if isinstance(command, str):
+        parsed = shlex.split(command)
+        if not parsed:
+            raise ValueError('Validation command cannot be empty.')
+        return parsed
+    parsed = [str(part) for part in command]
+    if not parsed:
+        raise ValueError('Validation command cannot be empty.')
+    return parsed
 
 
 class CandidateCycleManager:
@@ -168,9 +187,11 @@ class CandidateCycleManager:
             validation_passed = bool(patch_result.get('success'))
             if validation_passed:
                 for command in commands:
-                    proc = subprocess.run(command, cwd=candidate_dir, shell=True, text=True, capture_output=True, timeout=timeout)
+                    argv = _normalize_validation_command(command)
+                    proc = subprocess.run(argv, cwd=candidate_dir, text=True, capture_output=True, timeout=timeout)
                     item = {
                         'command': command,
+                        'argv': argv,
                         'returncode': proc.returncode,
                         'passed': proc.returncode == 0,
                         'stdout': proc.stdout[-2000:],
