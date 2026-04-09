@@ -26,7 +26,7 @@ It is aimed at people searching for:
 
 - [What this repository is](#what-this-repository-is)
 - [Why it exists](#why-it-exists)
-- [Current package state](#current-package-state-v2111)
+- [Current package state](#current-package-state-v2140)
 - [Direction goals](#direction-goals)
 - [What makes it different](#what-makes-it-different)
 - [Architecture walkthrough](#architecture-walkthrough)
@@ -43,6 +43,7 @@ It is aimed at people searching for:
 - [Documentation routing](#documentation-routing)
 - [Comparison snapshot](#comparison-snapshot)
 - [Production posture](#production-posture)
+- [Runtime modularization note](#runtime-modularization-note)
 - [SEO and discoverability notes](#seo-and-discoverability-notes)
 - [License](#license)
 
@@ -68,7 +69,7 @@ This project is aimed at a different center of gravity:
 
 The runtime identity comes from directives, doctrine, runtime state, memory lineage, repair lineage, and the attached cognition/model layer. That means continuity does not disappear when one model run ends.
 
-## Current package state (v2.11.2)
+## Current package state (v2.17.0)
 
 This repository currently includes:
 - persistent shared SQLite-backed kernel state
@@ -78,6 +79,11 @@ This repository currently includes:
 - rollback, replay, evaluations, policy decisions, and fallback histories
 - hot, warm, and archive memory tiers with early archive mirroring and ranked search
 - self-improvement analysis, planning, scaffolding, candidate generation, scoring, review, promotion, and adversarial fault injection
+- optional bounded robotics bridge for dog-body and tentacle-arm style adapters
+- optional local occupancy-grid mapping and route planning
+- canonical spatial truth layer for anchors, observations, and confidence summaries
+- optional geo overlay layer with anchor-vault and tile summaries
+- optional trusted bluetooth bridge with bounded device profiles and local signal generation modes
 - goal compilation into constraints, invariants, abort conditions, evidence requirements, and archive mode
 - shadow predicted-vs-actual comparison flows
 - tool trust tracking and curriculum-memory updates
@@ -505,6 +511,11 @@ python -m build
 ## Comparison snapshot
 
 This repo is strongest where you want a governed local runtime with continuity, replay, repair lineage, and bounded operational intelligence. It is not positioned as a giant cloud orchestration platform, and it is not pretending to be a finished AGI product.
+
+
+## Runtime modularization note
+
+The v2.15.0 pass reduced the main runtime authority by splitting model orchestration and code/self-improvement flows into `runtime_model.py` and `runtime_code.py`. The public `LuciferRuntime` API stays stable, but the trust surface is smaller and easier to audit. See `docs/runtime_modularization.md` for the breakdown.
 
 ## Production posture
 

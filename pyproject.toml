@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "arc-lucifer-cleanroom-runtime"
-version = "2.11.2"
+version = "2.17.0"
 description = "Deterministic local-first AI operator runtime with receipts, replay, rollback, ranked memory, full-spectrum perception adapters (video/speech/audio-events/OCR/depth/desktop), and FixNet repair intelligence."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -16,7 +16,7 @@ keywords = [
   "deterministic-systems", "self-improvement", "persistent-memory",
   "rollback", "replay", "cli", "clean-room", "vision-runtime",
   "robotics-runtime", "multimodal-runtime", "whisper", "ffmpeg",
-  "audio-classification", "ocr", "depth-sensor",
+  "audio-classification", "ocr", "depth-sensor", "bluetooth-bridge", "ble-runtime",
 ]
 classifiers = [
   "Programming Language :: Python :: 3",
@@ -41,6 +41,10 @@ where = ["src"]
 [project.optional-dependencies]
 dev = [
   "pytest>=8",
+]
+
+bluetooth = [
+  "bleak>=0.22",
 ]
 
 # ── Vision (cameras, video streams, desktop, OCR) ──────────────────────────
