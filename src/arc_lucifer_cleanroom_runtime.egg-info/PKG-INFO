@@ -108,6 +108,7 @@ It is aimed at people searching for:
 - [Documentation routing](#documentation-routing)
 - [Comparison snapshot](#comparison-snapshot)
 - [Production posture](#production-posture)
+- [Implementation truth matrix](#implementation-truth-matrix)
 - [Runtime modularization note](#runtime-modularization-note)
 - [SEO and discoverability notes](#seo-and-discoverability-notes)
 - [License](#license)
@@ -572,6 +573,9 @@ python -m build
 - [Source comparison](docs/source_comparison.md)
 - [Benchmarks](docs/benchmarks.md)
 - [Migration plan](docs/migration_plan.md)
+- [Production readiness gate](docs/production_readiness.md)
+- [Release checklist](docs/RELEASE_CHECKLIST.md)
+- [Soak harness](docs/SOAK.md)
 
 ## Comparison snapshot
 
@@ -581,6 +585,10 @@ This repo is strongest where you want a governed local runtime with continuity, 
 ## Runtime modularization note
 
 The v2.15.0 pass reduced the main runtime authority by splitting model orchestration and code/self-improvement flows into `runtime_model.py` and `runtime_code.py`. The public `LuciferRuntime` API stays stable, but the trust surface is smaller and easier to audit. See `docs/runtime_modularization.md` for the breakdown.
+
+## Implementation truth matrix
+
+See [docs/IMPLEMENTATION_MATRIX.md](docs/IMPLEMENTATION_MATRIX.md) for the hard split between live, bounded, optional, experimental, and planned capability claims.
 
 ## Production posture
 

@@ -4,8 +4,11 @@ MANIFEST.in
 README.md
 pyproject.toml
 assets/social-preview.svg
+docs/IMPLEMENTATION_MATRIX.md
 docs/INDEX.md
+docs/RELEASE_CHECKLIST.md
 docs/REPO_SEO.md
+docs/SOAK.md
 docs/architecture.md
 docs/benchmarks.md
 docs/bluetooth_bridge.md
@@ -185,6 +188,7 @@ src/verifier/__init__.py
 src/verifier/safety.py
 src/verifier/validators.py
 tests/test_adversarial_cycles.py
+tests/test_agi_loop.py
 tests/test_bench_and_state_world_model.py
 tests/test_bluetooth_bridge.py
 tests/test_bluetooth_spatial_integration.py
@@ -211,6 +215,7 @@ tests/test_optional_adapters.py
 tests/test_pending_and_rollback.py
 tests/test_persistence_and_trace.py
 tests/test_persistent_loop.py
+tests/test_release_doctor_and_soak.py
 tests/test_replay_and_pending_state.py
 tests/test_resilience.py
 tests/test_robotics_bridge.py
