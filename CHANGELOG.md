@@ -1,3 +1,18 @@
+## v2.17.0
+
+- added optional `bluetooth_bridge` with trusted device registry, bounded profiles, policy checks, and receipt-bearing actions
+- added mock local signal generation modes for beacon advertising and local peripheral serving
+- added CLI surface for bluetooth bridge inspection, registration, policy checks, signal summaries, and bounded perform flows
+- added docs/tests/smoke coverage for the bluetooth bridge
+
+## v2.15.0
+
+- added optional `robotics_bridge/` with deterministic interlocks, mock dog-body and tentacle-arm adapters, and bounded robot CLI commands
+- added optional `robotics_mapping/` with occupancy-grid updates, coverage summaries, and deterministic route planning
+- added canonical `spatial_truth/` for anchors, structured observations, transform helpers, and confidence summaries
+- added optional `geo_overlay/` inspired by the spatial reference package's local address tiling concepts
+- extended smoke tests and CLI coverage for robot, mapping, spatial, and geo surfaces
+
 ## v2.11.2
 
 - added a production hardening pass for release discipline and repository hygiene

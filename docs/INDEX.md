@@ -13,6 +13,7 @@ This folder is the long-form technical walkthrough for ARC Lucifer Cleanroom Run
 - `token_counting.md` — token accounting notes
 - `v2_9_model_profiles_and_training.md` — model profile registry and future training/export hooks
 - `v2_10_control_loops.md` — runtime control-loop additions and operational evolution
+- `bluetooth_bridge.md` — optional trusted-device Bluetooth command and signal layer
 
 ## Memory and archive behavior
 - `memory_retention.md` — retention logic and tier behavior
@@ -61,3 +62,5 @@ This folder is the long-form technical walkthrough for ARC Lucifer Cleanroom Run
 1. `REPO_SEO.md`
 2. `source_comparison.md`
 3. `benchmarks.md`
+
+- [Runtime modularization](runtime_modularization.md)
