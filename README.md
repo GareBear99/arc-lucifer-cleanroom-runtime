@@ -15,7 +15,6 @@ This repo is strongest when you want:
 - exact code-editing and self-improvement scaffolding under bounded validation
 - a clean path to attach optional multimodal, bluetooth, mapping, and robotics layers without making them mandatory for every install
 
-![Social preview](assets/social-preview.svg)
 
 ## Table of contents
 
