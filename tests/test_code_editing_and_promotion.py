@@ -67,3 +67,44 @@ def test_self_improve_validate_and_promote(tmp_path: Path):
     state = runtime.kernel.state()
     assert any(item.get('kind') == 'self_improve_promotion' for item in state.improvement_runs)
     runtime.kernel.close()
+
+
+def test_self_improve_validate_records_argv_without_shell(tmp_path: Path):
+    runtime = make_runtime(tmp_path)
+    scaffold = runtime.scaffold_improvement_run()
+    run = scaffold['run']
+    manifest_path = Path(run['manifest_path'])
+    manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+    manifest['recommended_commands'] = ['python -c "print(123)"']
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True), encoding='utf-8')
+
+    validated = runtime.validate_improvement_run(run['run_id'], timeout=30)
+    assert validated['passed'] is True
+    assert validated['command_results'][0]['argv'] == ['python', '-c', 'print(123)']
+    runtime.kernel.close()
+
+
+def test_self_improve_review_blocks_protected_core_paths(tmp_path: Path):
+    runtime = make_runtime(tmp_path)
+    scaffold = runtime.scaffold_improvement_run()
+    run = scaffold['run']
+    manifest_path = Path(run['manifest_path'])
+    manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+    manifest['recommended_commands'] = ['python -c "print(123)"']
+    manifest['applied_patches'] = [{
+        'patch_id': f"{run['run_id']}:patch:001",
+        'artifact_path': str((Path(run['worktree_dir']) / 'patch.json').resolve()),
+        'success': True,
+        'path': 'src/arc_kernel/engine.py',
+        'kind': 'replace_range',
+    }]
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True), encoding='utf-8')
+
+    validated = runtime.validate_improvement_run(run['run_id'], timeout=30)
+    assert validated['passed'] is True
+
+    review = runtime.review_improvement_run(run['run_id'])
+    assert review['status'] == 'error'
+    assert review['checks']['baseline_allows_patches'] is False
+    assert review['baseline_review']['patch_reviews'][0]['baseline']['requires_override'] is True
+    runtime.kernel.close()
