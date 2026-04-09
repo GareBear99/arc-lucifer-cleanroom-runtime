@@ -1,13 +1,13 @@
 Metadata-Version: 2.4
 Name: arc-lucifer-cleanroom-runtime
-Version: 2.10.6
-Summary: Deterministic local-first AI operator runtime with receipts, replay, rollback, ranked memory, optional perception/robotics adapters, and FixNet repair intelligence.
+Version: 2.11.2
+Summary: Deterministic local-first AI operator runtime with receipts, replay, rollback, ranked memory, full-spectrum perception adapters (video/speech/audio-events/OCR/depth/desktop), and FixNet repair intelligence.
 Author: Gary Doman
 License-Expression: MIT
 Project-URL: Homepage, https://github.com/GareBear99/arc-lucifer-cleanroom-runtime
 Project-URL: Documentation, https://github.com/GareBear99/arc-lucifer-cleanroom-runtime/tree/main/docs
 Project-URL: Issues, https://github.com/GareBear99/arc-lucifer-cleanroom-runtime/issues
-Keywords: ai-runtime,local-ai,agent-runtime,llamafile,gguf,deterministic-systems,self-improvement,persistent-memory,rollback,replay,cli,clean-room,vision-runtime,robotics-runtime,multimodal-runtime
+Keywords: ai-runtime,local-ai,agent-runtime,llamafile,gguf,deterministic-systems,self-improvement,persistent-memory,rollback,replay,cli,clean-room,vision-runtime,robotics-runtime,multimodal-runtime,whisper,ffmpeg,audio-classification,ocr,depth-sensor
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.11
 Classifier: Programming Language :: Python :: 3.12
@@ -25,8 +25,15 @@ Provides-Extra: vision
 Requires-Dist: numpy>=1.26; extra == "vision"
 Requires-Dist: Pillow>=10; extra == "vision"
 Requires-Dist: opencv-python>=4.10; extra == "vision"
+Requires-Dist: ffmpeg-python>=0.2; extra == "vision"
+Requires-Dist: mss>=9.0; extra == "vision"
+Requires-Dist: easyocr>=1.7; extra == "vision"
 Provides-Extra: audio
 Requires-Dist: numpy>=1.26; extra == "audio"
+Requires-Dist: openai-whisper>=20231117; extra == "audio"
+Requires-Dist: ffmpeg-python>=0.2; extra == "audio"
+Requires-Dist: librosa>=0.10; extra == "audio"
+Requires-Dist: soundfile>=0.12; extra == "audio"
 Provides-Extra: robotics
 Requires-Dist: numpy>=1.26; extra == "robotics"
 Provides-Extra: embodiment
@@ -35,6 +42,23 @@ Provides-Extra: full
 Requires-Dist: numpy>=1.26; extra == "full"
 Requires-Dist: Pillow>=10; extra == "full"
 Requires-Dist: opencv-python>=4.10; extra == "full"
+Requires-Dist: ffmpeg-python>=0.2; extra == "full"
+Requires-Dist: mss>=9.0; extra == "full"
+Requires-Dist: easyocr>=1.7; extra == "full"
+Requires-Dist: openai-whisper>=20231117; extra == "full"
+Requires-Dist: librosa>=0.10; extra == "full"
+Requires-Dist: soundfile>=0.12; extra == "full"
+Provides-Extra: audio-fast
+Requires-Dist: numpy>=1.26; extra == "audio-fast"
+Requires-Dist: faster-whisper>=1.0; extra == "audio-fast"
+Requires-Dist: ffmpeg-python>=0.2; extra == "audio-fast"
+Requires-Dist: librosa>=0.10; extra == "audio-fast"
+Requires-Dist: soundfile>=0.12; extra == "audio-fast"
+Provides-Extra: voice
+Requires-Dist: numpy>=1.26; extra == "voice"
+Requires-Dist: websockets>=12.0; extra == "voice"
+Requires-Dist: sounddevice>=0.4; extra == "voice"
+Requires-Dist: opuslib>=0.3; extra == "voice"
 Dynamic: license-file
 
 # ARC Lucifer Cleanroom Runtime
@@ -65,7 +89,7 @@ It is aimed at people searching for:
 
 - [What this repository is](#what-this-repository-is)
 - [Why it exists](#why-it-exists)
-- [Current package state](#current-package-state-v2106)
+- [Current package state](#current-package-state-v2111)
 - [Direction goals](#direction-goals)
 - [What makes it different](#what-makes-it-different)
 - [Architecture walkthrough](#architecture-walkthrough)
@@ -107,7 +131,7 @@ This project is aimed at a different center of gravity:
 
 The runtime identity comes from directives, doctrine, runtime state, memory lineage, repair lineage, and the attached cognition/model layer. That means continuity does not disappear when one model run ends.
 
-## Current package state (v2.10.6)
+## Current package state (v2.11.2)
 
 This repository currently includes:
 - persistent shared SQLite-backed kernel state
