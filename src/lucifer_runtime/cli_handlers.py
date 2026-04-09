@@ -8,6 +8,7 @@ import os
 import platform
 import shutil
 from pathlib import Path
+import sys
 from typing import Any
 
 from arc_kernel.engine import KernelEngine
@@ -53,6 +54,43 @@ def runtime_from_args(args: argparse.Namespace) -> LuciferRuntime:
     kernel = KernelEngine(db_path=db_path)
     return LuciferRuntime(kernel=kernel, workspace_root=settings.get('workspace', args.workspace))
 
+
+
+
+def _repo_root_from_workspace(workspace: str | Path) -> Path:
+    workspace_path = Path(workspace).expanduser().resolve()
+    for candidate in [workspace_path, *workspace_path.parents]:
+        if (candidate / 'pyproject.toml').exists() and (candidate / 'README.md').exists() and (candidate / 'src').exists():
+            return candidate
+    return workspace_path
+
+
+def _release_gate_checks(repo_root: Path) -> list[dict[str, Any]]:
+    checks: list[dict[str, Any]] = []
+
+    def add(name: str, ok: bool, detail: str, level: str = 'error') -> None:
+        checks.append({'name': name, 'ok': ok, 'detail': detail, 'level': level})
+
+    pyproject = repo_root / 'pyproject.toml'
+    readme = repo_root / 'README.md'
+    docs_prod = repo_root / 'docs' / 'production_readiness.md'
+    scripts_dir = repo_root / 'scripts'
+    workflow_ci = repo_root / '.github' / 'workflows' / 'ci.yml'
+    workflow_release = repo_root / '.github' / 'workflows' / 'release-gate.yml'
+
+    add('repo_root_detected', pyproject.exists(), f'repo_root={repo_root}')
+    add('readme_present', readme.exists(), f'readme={readme}')
+    add('production_docs_present', docs_prod.exists(), f'production_docs={docs_prod}', level='warn')
+    add('smoke_script_present', (scripts_dir / 'smoke.sh').exists(), f'smoke={scripts_dir / "smoke.sh"}')
+    add('release_check_present', (scripts_dir / 'release_check.sh').exists(), f'release_check={scripts_dir / "release_check.sh"}')
+    add('version_audit_present', (scripts_dir / 'version_audit.py').exists(), f'version_audit={scripts_dir / "version_audit.py"}')
+    add('ci_workflow_present', workflow_ci.exists(), f'ci_workflow={workflow_ci}', level='warn')
+    add('release_workflow_present', workflow_release.exists(), f'release_workflow={workflow_release}', level='warn')
+
+    if pyproject.exists():
+        add('pyproject_has_project_name', 'name = ' in pyproject.read_text(encoding='utf-8'), f'pyproject={pyproject}')
+
+    return checks
 
 def _print_json(data: dict[str, Any]) -> int:
     print(json.dumps(data, indent=2, sort_keys=True))
@@ -165,8 +203,9 @@ def _doctor(runtime: LuciferRuntime, args: argparse.Namespace) -> dict[str, Any]
     def add_check(name: str, ok: bool, detail: str, level: str = 'error') -> None:
         checks.append({'name': name, 'ok': ok, 'detail': detail, 'level': level})
 
+    workspace_path = Path(args.workspace).expanduser().resolve()
     add_check('python_version', tuple(map(int, platform.python_version_tuple()[:2])) >= (3, 11), f'Python {platform.python_version()}')
-    add_check('workspace_exists', Path(args.workspace).expanduser().resolve().exists(), f'workspace={Path(args.workspace).expanduser().resolve()}')
+    add_check('workspace_exists', workspace_path.exists(), f'workspace={workspace_path}')
     runtime_dir.mkdir(parents=True, exist_ok=True)
     add_check('runtime_dir_writable', os.access(runtime_dir, os.W_OK), f'runtime_dir={runtime_dir}')
     stats = runtime.kernel.stats()
@@ -176,29 +215,52 @@ def _doctor(runtime: LuciferRuntime, args: argparse.Namespace) -> dict[str, Any]
         db_parent.mkdir(parents=True, exist_ok=True)
         add_check('db_parent_writable', os.access(db_parent, os.W_OK), f'db_parent={db_parent}')
     add_check('config_present', config_path.exists(), f'config_path={config_path}', level='warn')
-    add_check('llamafile_binary', bool(binary_path) and Path(str(binary_path)).expanduser().exists(), f'binary_path={binary_path}', level='warn')
-    add_check('llamafile_model', bool(model_path) and Path(str(model_path)).expanduser().exists(), f'model_path={model_path}', level='warn')
-    if binary_path and Path(str(binary_path)).expanduser().exists():
-        add_check('llamafile_executable', os.access(Path(str(binary_path)).expanduser(), os.X_OK), f'binary_path={binary_path}', level='warn')
+    if binary_path and str(binary_path).startswith('/absolute/path/'):
+        add_check('llamafile_binary_placeholder', True, f'binary_path={binary_path}', level='info')
+    elif binary_path:
+        binary_resolved = Path(str(binary_path)).expanduser()
+        add_check('llamafile_binary', binary_resolved.exists(), f'binary_path={binary_path}', level='warn')
+        if binary_resolved.exists():
+            add_check('llamafile_executable', os.access(binary_resolved, os.X_OK), f'binary_path={binary_path}', level='warn')
+    else:
+        add_check('llamafile_binary_unset', True, 'No local model binary configured; deterministic runtime remains available.', level='info')
+    if model_path and str(model_path).startswith('/absolute/path/'):
+        add_check('llamafile_model_placeholder', True, f'model_path={model_path}', level='info')
+    elif model_path:
+        model_resolved = Path(str(model_path)).expanduser()
+        add_check('llamafile_model', model_resolved.exists(), f'model_path={model_path}', level='warn')
+    else:
+        add_check('llamafile_model_unset', True, 'No GGUF model configured; model prompt path remains optional.', level='info')
     lucifer_bin = shutil.which('lucifer')
     add_check('lucifer_on_path', bool(lucifer_bin), f'lucifer={lucifer_bin}', level='warn')
+
+    repo_root = _repo_root_from_workspace(workspace_path)
+    if getattr(args, 'release_gate', False):
+        checks.extend(_release_gate_checks(repo_root))
+
+    warnings = sum(1 for check in checks if not check['ok'] and check['level'] == 'warn')
+    errors = sum(1 for check in checks if not check['ok'] and check['level'] == 'error')
+    strict_failures = warnings if getattr(args, 'strict', False) else 0
     summary = {
-        'ok': all(check['ok'] or check['level'] == 'warn' for check in checks),
-        'errors': sum(1 for check in checks if not check['ok'] and check['level'] != 'warn'),
-        'warnings': sum(1 for check in checks if not check['ok'] and check['level'] == 'warn'),
+        'ok': errors == 0 and strict_failures == 0,
+        'errors': errors + strict_failures,
+        'warnings': warnings,
+        'strict': bool(getattr(args, 'strict', False)),
     }
     return {
-        'status': 'ok' if summary['errors'] == 0 else 'error',
+        'status': 'ok' if summary['ok'] else 'error',
         'summary': summary,
         'checks': checks,
         'paths': {
-            'workspace': str(Path(args.workspace).expanduser().resolve()),
+            'workspace': str(workspace_path),
             'runtime_dir': str(runtime_dir),
             'db_path': str(db_path) if db_path is not None else None,
             'config_path': str(config_path),
+            'repo_root': str(repo_root),
         },
         'db_stats': stats,
         'config': config,
+        'python_executable': sys.executable,
     }
 
 

@@ -98,8 +98,10 @@ def build_parser() -> argparse.ArgumentParser:
     monitor_p.add_argument('--watch', type=float, default=0.0, help='Refresh interval in seconds. 0 prints once.')
     monitor_p.add_argument('--iterations', type=int, default=1, help='How many refreshes to print when --watch is set.')
 
-    doctor_p = sub.add_parser('doctor', help='Run production diagnostics for workspace, DB, and local model config.')
+    doctor_p = sub.add_parser('doctor', help='Run production diagnostics for workspace, DB, local model config, and release gates.')
     doctor_p.add_argument('--json-output', action='store_true', help='Emit only the final JSON diagnostic payload.')
+    doctor_p.add_argument('--release-gate', action='store_true', help='Include repo release-hygiene checks when running inside the project tree.')
+    doctor_p.add_argument('--strict', action='store_true', help='Treat warnings as errors for operator/release gating.')
 
     config_p = sub.add_parser('config', help='Inspect or write the runtime JSON config file.')
     config_sub = config_p.add_subparsers(dest='config_command', required=True)
