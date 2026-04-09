@@ -5,10 +5,10 @@
 [![License](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE.md)
 
 
-<div align="center">
+
   <a href="https://github.com/sponsors/GareBear99"><img src="https://img.shields.io/badge/Sponsor-GitHub%20Sponsors-ea4aaa?style=flat&logo=githubsponsors&logoColor=white" alt="Sponsor" /></a>
   <a href="https://buymeacoffee.com/garebear99"><img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=flat&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me a Coffee" /></a>
-</div>
+
 
 Deterministic local-first AI operator runtime with receipts, replay, rollback, ranked memory, bounded self-improvement, and optional perception, bluetooth, mapping, and robotics adapters.
 
