@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import json
+import shlex
 import shutil
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+from cognition_services.immutable_baseline import ImmutableBaseline
 
 
 @dataclass(slots=True)
@@ -26,6 +29,19 @@ class ValidationResult:
             'worktree_dir': self.worktree_dir,
             'validation_path': self.validation_path,
         }
+
+
+def _normalize_validation_command(command: str | list[str] | tuple[str, ...]) -> list[str]:
+    """Return an argv-style validation command without invoking a shell."""
+    if isinstance(command, str):
+        parsed = shlex.split(command)
+        if not parsed:
+            raise ValueError('Validation command cannot be empty.')
+        return parsed
+    parsed = [str(part) for part in command]
+    if not parsed:
+        raise ValueError('Validation command cannot be empty.')
+    return parsed
 
 
 class PromotionGate:
@@ -50,16 +66,17 @@ class PromotionGate:
         command_results: list[dict[str, Any]] = []
         all_passed = True
         for command in manifest.get('recommended_commands', []):
+            argv = _normalize_validation_command(command)
             proc = subprocess.run(
-                command,
+                argv,
                 cwd=worktree_dir,
-                shell=True,
                 text=True,
                 capture_output=True,
                 timeout=timeout,
             )
             result = {
                 'command': command,
+                'argv': argv,
                 'returncode': proc.returncode,
                 'stdout': proc.stdout[-4000:],
                 'stderr': proc.stderr[-4000:],
@@ -83,6 +100,26 @@ class PromotionGate:
             validation_path=str(validation_path.resolve()),
         )
 
+    def _baseline_review(self, workspace_root: str | Path, manifest: dict[str, Any]) -> dict[str, Any]:
+        baseline = ImmutableBaseline(workspace_root)
+        patch_reviews: list[dict[str, Any]] = []
+        all_allowed = True
+        for patch in manifest.get('applied_patches', []):
+            path = str(patch.get('path', ''))
+            decision = baseline.check(path)
+            patch_review = {
+                'patch_id': patch.get('patch_id'),
+                'path': path,
+                'success': bool(patch.get('success')),
+                'baseline': decision.to_dict(),
+            }
+            patch_reviews.append(patch_review)
+            all_allowed = all_allowed and bool(decision.allowed)
+        return {
+            'all_allowed': all_allowed,
+            'patch_reviews': patch_reviews,
+        }
+
     def review_run(self, workspace_root: str | Path, run_id: str) -> dict[str, Any]:
         run_dir = self._find_run_dir(workspace_root, run_id)
         manifest = self.load_manifest(workspace_root, run_id)
@@ -98,18 +135,21 @@ class PromotionGate:
         command_results = list(validation.get('command_results', []))
         applied_patches = list(manifest.get('applied_patches', []))
         all_patch_success = all(p.get('success') for p in applied_patches) if applied_patches else True
+        baseline_review = self._baseline_review(workspace_root, manifest)
         checks = {
             'validation_exists': True,
             'validation_passed': bool(validation.get('passed')),
             'command_count': len(command_results),
             'has_evidence_bundle': bool(command_results),
             'all_patch_success': all_patch_success,
+            'baseline_allows_patches': baseline_review['all_allowed'],
         }
         approved = all([
             checks['validation_exists'],
             checks['validation_passed'],
             checks['has_evidence_bundle'],
             checks['all_patch_success'],
+            checks['baseline_allows_patches'],
         ])
         reason = 'approved' if approved else 'promotion_court_denied'
         payload = {
@@ -119,6 +159,7 @@ class PromotionGate:
             'checks': checks,
             'command_results': command_results,
             'applied_patches': applied_patches,
+            'baseline_review': baseline_review,
         }
         (run_dir / 'promotion_review.json').write_text(json.dumps(payload, indent=2, sort_keys=True), encoding='utf-8')
         return payload
