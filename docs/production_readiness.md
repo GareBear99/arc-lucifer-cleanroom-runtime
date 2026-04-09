@@ -8,6 +8,8 @@ This repo now clears the following local release gates:
 - `bash scripts/smoke.sh`
 - `bash scripts/release_check.sh`
 - `python scripts/version_audit.py`
+- `python -m lucifer_runtime.cli --workspace . doctor --release-gate --strict`
+- `python scripts/soak.py --workspace . --iterations 10 --output artifacts/soak_receipt.json`
 
 ## What changed in the v2.11.x hardening passes
 
@@ -25,6 +27,7 @@ This repository is now a **credible production-ready local release candidate** f
 - FixNet / trust / curriculum / directive flows
 - self-improvement scaffolding and validation loops
 - repo distribution with repeatable release checks
+- CI-enforced release hygiene and deterministic soak receipts
 
 It is **not** yet proven for:
 
