@@ -1,12 +1,17 @@
 arc_kernel
+bluetooth_bridge
 code_editing
 cognition_services
 dashboards
 fixnet
+geo_overlay
 lucifer_runtime
 memory_subsystem
 model_services
 perception_adapters
 resilience
+robotics_bridge
+robotics_mapping
 self_improve
+spatial_truth
 verifier
