@@ -21,6 +21,21 @@ This repo is strongest when you want:
 - exact code-editing and self-improvement scaffolding under bounded validation
 - a clean path to attach optional multimodal, bluetooth, mapping, and robotics layers without making them mandatory for every install
 
+| Dimension | ARC Lucifer Cleanroom Runtime | Typical agent wrapper |
+|---|---|---|
+| Core identity | Persistent operator runtime | Session/chat wrapper |
+| State model | Receipts, replay, rollback, continuity | Mostly transcript-based |
+| Memory | Tiered + archive lineage | Often shallow or ad hoc |
+| Repair intelligence | FixNet lineage and reuse | Usually manual notes or none |
+| Code editing | Exact line/symbol grounded flows | Often best-effort patching |
+| Optional embodiment | Attached through bounded adapters | Often absent or bolted on |
+| Install philosophy | Local-first core, extras optional | Frequently cloud-first or dependency-heavy |
+
+
+The honest strongest claim today is:
+
+“A serious open-source continuity-first runtime foundation with real receipts, replay/rollback, directive persistence, bounded action policy, and self-improvement scaffolding.”
+
 ## Plain-English use case
 
 Think of this repo as a **local AI operations shell** that does not forget its rules every time the model stops talking.
