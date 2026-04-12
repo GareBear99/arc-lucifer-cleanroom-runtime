@@ -62,20 +62,6 @@ flowchart LR
     M --> N[Next Run Starts Smarter]
 ```
 
-## 15-second example
-
-```text
-Operator: verify src/lucifer_runtime/runtime.py and patch the failing guard path
-Runtime:
-  1. loads directives and continuity state
-  2. inspects the target file through bounded tools
-  3. proposes an exact grounded edit
-  4. records a receipt before and after the change
-  5. verifies the result
-  6. can roll back if validation fails
-  7. stores the fix outcome in memory / repair lineage
-```
-
 ## Table of contents
 
 - [What this repo is](#what-this-repo-is)
@@ -121,6 +107,20 @@ It combines a durable runtime spine with:
 - self-improvement analysis, candidate generation, validation, and promotion
 - FixNet repair lineage and archive mirroring
 - optional perception, voice, mapping, bluetooth, geo, and robotics surfaces
+
+## 15-second example
+
+```text
+Operator: verify src/lucifer_runtime/runtime.py and patch the failing guard path
+Runtime:
+  1. loads directives and continuity state
+  2. inspects the target file through bounded tools
+  3. proposes an exact grounded edit
+  4. records a receipt before and after the change
+  5. verifies the result
+  6. can roll back if validation fails
+  7. stores the fix outcome in memory / repair lineage
+```
 
 ## What it does today
 
