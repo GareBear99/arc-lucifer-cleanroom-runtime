@@ -21,29 +21,56 @@ This repo is strongest when you want:
 - exact code-editing and self-improvement scaffolding under bounded validation
 - a clean path to attach optional multimodal, bluetooth, mapping, and robotics layers without making them mandatory for every install
 
-| Dimension | ARC Lucifer Cleanroom Runtime | Typical agent wrapper |
-|---|---|---|
-| Core identity | Persistent operator runtime | Session/chat wrapper |
-| State model | Receipts, replay, rollback, continuity | Mostly transcript-based |
-| Memory | Tiered + archive lineage | Often shallow or ad hoc |
-| Repair intelligence | FixNet lineage and reuse | Usually manual notes or none |
-| Code editing | Exact line/symbol grounded flows | Often best-effort patching |
-| Optional embodiment | Attached through bounded adapters | Often absent or bolted on |
-| Install philosophy | Local-first core, extras optional | Frequently cloud-first or dependency-heavy |
+## Plain-English use case
 
-The honest strongest claim today is:
+Think of this repo as a **local AI operations shell** that does not forget its rules every time the model stops talking.
 
-“A serious open-source continuity-first runtime foundation with real receipts, replay/rollback, directive persistence, bounded action policy, and self-improvement scaffolding.”
+Instead of only producing text, the runtime can:
+- take a directive or goal
+- compile it into bounded actions
+- execute through controlled adapters
+- emit receipts and evidence for what happened
+- verify the result
+- preserve memory, repair knowledge, and continuity for the next run
+
+A practical example is a local coding/runtime operator that can inspect state, apply a grounded code edit, validate the result, roll back if needed, and retain the outcome as reusable operational knowledge instead of burying it in a transient chat log.
+
+## At-a-glance runtime flow
+
+```mermaid
+flowchart LR
+    I[Directive / Goal] --> P[Policy + Planning]
+    P --> X[Controlled Execution]
+    X --> R[Receipts + Evidence]
+    R --> V[Verify / Compare]
+    V --> M[Memory + FixNet + Continuity]
+    M --> N[Next Run Starts Smarter]
+```
+
+## 15-second example
+
+```text
+Operator: verify src/lucifer_runtime/runtime.py and patch the failing guard path
+Runtime:
+  1. loads directives and continuity state
+  2. inspects the target file through bounded tools
+  3. proposes an exact grounded edit
+  4. records a receipt before and after the change
+  5. verifies the result
+  6. can roll back if validation fails
+  7. stores the fix outcome in memory / repair lineage
+```
 
 ## Table of contents
 
 - [What this repo is](#what-this-repo-is)
 - [What it does today](#what-it-does-today)
 - [What it is not](#what-it-is-not)
+- [Plain-English use case](#plain-english-use-case)
+- [At-a-glance runtime flow](#at-a-glance-runtime-flow)
+- [15-second example](#15-second-example)
 - [Start here in 60 seconds](#start-here-in-60-seconds)
 - [Capability matrix](#capability-matrix)
-- [Claim-safe benchmark posture](#claim-safe-benchmark-posture)
-- [RetentionBench v1 targets](#retentionbench-v1-targets)
 - [Why it exists](#why-it-exists)
 - [Architecture snapshot](#architecture-snapshot)
 - [Repository layout](#repository-layout)
@@ -81,8 +108,6 @@ It combines a durable runtime spine with:
 - optional perception, voice, mapping, bluetooth, geo, and robotics surfaces
 
 ## What it does today
-
-## Current package state (v2.17.0)
 
 Current package state in this repository includes:
 - persistent SQLite-backed kernel state
@@ -173,60 +198,6 @@ make release-check
 | Mapping / geo overlay | Optional | Occupancy-grid routing, anchors, tile summaries |
 | Perception / voice | Optional | Adapters and loops exist, but depend on extra packages and target stack choices |
 | Production soak / installers | In progress | Repo has scripts and docs, but not a completed signed installer pipeline |
-
-## Claim-safe benchmark posture
-
-This repo should make strong claims only where there is a proof path. The strongest claim lanes today are:
-- persistent local operator runtime with durable directives, receipts, replay, rollback, and continuity state
-- tiered hot / warm / archive memory with immutable compressed archive packs
-- bounded storage growth under compact textual event workloads
-- grounded code editing plus bounded scaffold -> patch -> validate -> promote workflows
-- reusable FixNet repair lineage instead of disposable log-only repair history
-
-Recommended public wording:
-- **Persistent local AI operator runtime** with receipts, replay, rollback, directive continuity, and replaceable local cognition backends
-- **Tiered long-horizon memory** with hot, warm, and archive retention plus immutable `.arcpack` archive bundles
-- **Bounded storage growth** under archive compaction rather than unbounded hot-state accumulation
-- **Grounded code editing and bounded self-improvement scaffolding** under validation and promotion gates
-
-Claims this repo should **not** make yet:
-- highest benchmarked memory system in the world
-- proven 50-year continuous operation
-- solved AGI or unrestricted autonomy
-- universal production-ready robotics control
-
-## RetentionBench v1 targets
-
-The most defensible benchmark lane for this repo is not generic retrieval bragging. It is **continuity + retention efficiency + archive retrieval under bounded local storage**.
-
-A practical benchmark shape for this repo is:
-- simulate fixed daily runtime activity
-- archive older records through the real retention path
-- measure compressed bytes per archived event
-- project yearly storage growth
-- verify retrieval still works after archival
-
-Useful metrics:
-- `compressed_bytes_per_event`
-- `daily_storage_growth_bytes`
-- `projected_yearly_growth_gib`
-- `archive_query_hit_rate`
-- `continuity_restore_rate`
-- `silent_loss_incidents`
-
-Local archive simulations run against the package logic produced compact-text retention ranges around:
-- **~205 bytes / archived record** on varied small-text workloads
-- **~314 bytes / archived record** on heavier varied text workloads
-
-That implies rough annual archive envelopes such as:
-- **~14.3k archived events/day** at ~205 bytes/event within ~1 GiB/year
-- **~9.4k archived events/day** at ~314 bytes/event within ~1 GiB/year
-- **~5.7k archived events/day** at ~512 bytes/event within ~1 GiB/year
-
-These figures are best presented as **local archive simulation results**, not universal guarantees. They depend on event payload size, archive policy, metadata shape, and how aggressively old state is moved out of the hot working set.
-
-Suggested next benchmark headline once results are committed:
-> RetentionBench v1: searchable archive retention under a bounded local storage budget, with compact textual runtime workloads staying within a plausible sub-1-GiB/year envelope.
 
 ## Why it exists
 
@@ -506,8 +477,6 @@ This repository includes real validation surfaces:
 - release validation under [`scripts/release_check.sh`](scripts/release_check.sh)
 - soak harness materials under [`scripts/soak.py`](scripts/soak.py) and [docs/SOAK.md](docs/SOAK.md)
 - package build support through `python -m build`
-- recent local package inspection showed a substantial implementation surface with packaging artifacts and a mostly-clean automated test run
-- strongest measurable claim lanes today are continuity, retention, archive retrieval, repair lineage capture, and bounded fallback behavior
 
 Recommended verification flow:
 
