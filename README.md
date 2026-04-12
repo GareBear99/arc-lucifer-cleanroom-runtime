@@ -29,6 +29,8 @@ This repo is strongest when you want:
 - [What it is not](#what-it-is-not)
 - [Start here in 60 seconds](#start-here-in-60-seconds)
 - [Capability matrix](#capability-matrix)
+- [Claim-safe benchmark posture](#claim-safe-benchmark-posture)
+- [RetentionBench v1 targets](#retentionbench-v1-targets)
 - [Why it exists](#why-it-exists)
 - [Architecture snapshot](#architecture-snapshot)
 - [Repository layout](#repository-layout)
@@ -66,6 +68,8 @@ It combines a durable runtime spine with:
 - optional perception, voice, mapping, bluetooth, geo, and robotics surfaces
 
 ## What it does today
+
+## Current package state (v2.17.0)
 
 Current package state in this repository includes:
 - persistent SQLite-backed kernel state
@@ -156,6 +160,60 @@ make release-check
 | Mapping / geo overlay | Optional | Occupancy-grid routing, anchors, tile summaries |
 | Perception / voice | Optional | Adapters and loops exist, but depend on extra packages and target stack choices |
 | Production soak / installers | In progress | Repo has scripts and docs, but not a completed signed installer pipeline |
+
+## Claim-safe benchmark posture
+
+This repo should make strong claims only where there is a proof path. The strongest claim lanes today are:
+- persistent local operator runtime with durable directives, receipts, replay, rollback, and continuity state
+- tiered hot / warm / archive memory with immutable compressed archive packs
+- bounded storage growth under compact textual event workloads
+- grounded code editing plus bounded scaffold -> patch -> validate -> promote workflows
+- reusable FixNet repair lineage instead of disposable log-only repair history
+
+Recommended public wording:
+- **Persistent local AI operator runtime** with receipts, replay, rollback, directive continuity, and replaceable local cognition backends
+- **Tiered long-horizon memory** with hot, warm, and archive retention plus immutable `.arcpack` archive bundles
+- **Bounded storage growth** under archive compaction rather than unbounded hot-state accumulation
+- **Grounded code editing and bounded self-improvement scaffolding** under validation and promotion gates
+
+Claims this repo should **not** make yet:
+- highest benchmarked memory system in the world
+- proven 50-year continuous operation
+- solved AGI or unrestricted autonomy
+- universal production-ready robotics control
+
+## RetentionBench v1 targets
+
+The most defensible benchmark lane for this repo is not generic retrieval bragging. It is **continuity + retention efficiency + archive retrieval under bounded local storage**.
+
+A practical benchmark shape for this repo is:
+- simulate fixed daily runtime activity
+- archive older records through the real retention path
+- measure compressed bytes per archived event
+- project yearly storage growth
+- verify retrieval still works after archival
+
+Useful metrics:
+- `compressed_bytes_per_event`
+- `daily_storage_growth_bytes`
+- `projected_yearly_growth_gib`
+- `archive_query_hit_rate`
+- `continuity_restore_rate`
+- `silent_loss_incidents`
+
+Local archive simulations run against the package logic produced compact-text retention ranges around:
+- **~205 bytes / archived record** on varied small-text workloads
+- **~314 bytes / archived record** on heavier varied text workloads
+
+That implies rough annual archive envelopes such as:
+- **~14.3k archived events/day** at ~205 bytes/event within ~1 GiB/year
+- **~9.4k archived events/day** at ~314 bytes/event within ~1 GiB/year
+- **~5.7k archived events/day** at ~512 bytes/event within ~1 GiB/year
+
+These figures are best presented as **local archive simulation results**, not universal guarantees. They depend on event payload size, archive policy, metadata shape, and how aggressively old state is moved out of the hot working set.
+
+Suggested next benchmark headline once results are committed:
+> RetentionBench v1: searchable archive retention under a bounded local storage budget, with compact textual runtime workloads staying within a plausible sub-1-GiB/year envelope.
 
 ## Why it exists
 
@@ -435,6 +493,8 @@ This repository includes real validation surfaces:
 - release validation under [`scripts/release_check.sh`](scripts/release_check.sh)
 - soak harness materials under [`scripts/soak.py`](scripts/soak.py) and [docs/SOAK.md](docs/SOAK.md)
 - package build support through `python -m build`
+- recent local package inspection showed a substantial implementation surface with packaging artifacts and a mostly-clean automated test run
+- strongest measurable claim lanes today are continuity, retention, archive retrieval, repair lineage capture, and bounded fallback behavior
 
 Recommended verification flow:
 
