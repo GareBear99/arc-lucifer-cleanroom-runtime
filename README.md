@@ -21,6 +21,9 @@ This repo is strongest when you want:
 - exact code-editing and self-improvement scaffolding under bounded validation
 - a clean path to attach optional multimodal, bluetooth, mapping, and robotics layers without making them mandatory for every install
 
+The honest strongest claim today is:
+
+“A serious open-source continuity-first runtime foundation with real receipts, replay/rollback, directive persistence, bounded action policy, and self-improvement scaffolding.”
 
 ## Table of contents
 
